@@ -29,29 +29,31 @@
                     <el-table-column
                             label="客户">
                         <template slot-scope="scope">
-                            <span>{{scope.row.advertiser||"空"}}</span>
+                            <span>{{scope.row.advertiser||"无"}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                             label="帐户" >
                         <template slot-scope="scope">
-                            <span>{{scope.row.a_users||"空"}}</span>
+                            <span>{{scope.row.a_users||"无"}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                             prop="true_url"
                             label="域名">
                         <template slot-scope="scope">
-                            <el-alert
-                                    :title="scope.row.true_url"
-                                    :type="scope.row.true_url"
-                                    :closable="false"
-                                    style="background-color: transparent;"
-                                    show-icon>
-                            </el-alert>
+                          {{  scope.row.true_url || '无'}}
                         </template>
                     </el-table-column>
                     <el-table-column
+                            prop="true_url"
+                            label="下载包">
+                        <template slot-scope="scope">
+                            {{  scope.row.zip_link || '无'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            v-if="chooseData == 'luodiData'"
                             label="进度" >
                         <template slot-scope="scope">
                             <span v-if="scope.row.is_ultimate_shenhe == 0">处理中...</span>
@@ -217,7 +219,7 @@ export default {
                     this.$message.error(err);
                 });
             },
-// 审核通过
+// 二级域名审核通过
             domain_shenhe(){
                 if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 0 ){
                     domain_shenhe1({
@@ -244,6 +246,10 @@ export default {
                         this.$message.error(err);
                     });
                 }
+            },
+//落地页审核
+            page_shenhe(){
+
             },
 //添加需二审求
             upyumingstatus(){
@@ -291,7 +297,7 @@ export default {
             if(this.chooseData == 'urlData'){
                 this.domain_list();
             }else{
-
+                this.page_list();
             }
         },
 //历史搜索-下拉
@@ -325,7 +331,12 @@ export default {
             this.jiexiBol = true;
         },
         push_shenhe(){
-            this.domain_shenhe()
+            if(this.chooseData == 'urlData'){
+                this.domain_shenhe()
+            }else{
+
+            }
+
         },
 
 
