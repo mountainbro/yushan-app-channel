@@ -6,23 +6,23 @@
 
                      <div class="lis" >
                          <span>选择客户：</span>
-                         <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
+                         <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择" @change="kehuchange">
                              <el-option
-                                     v-for="item in options"
-                                     :key="item.value"
-                                     :label="item.label"
-                                     :value="item.value">
+                                     v-for="item in companyoptions"
+                                     :key="item.id"
+                                     :label="item.advertiser"
+                                     :value="item.id">
                              </el-option>
                          </el-select>
                      </div>
                      <div class="lis" >
                          <span>选择账户：</span>
-                         <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
+                         <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择">
                              <el-option
-                                     v-for="item in options"
-                                     :key="item.value"
-                                     :label="item.label"
-                                     :value="item.value">
+                                     v-for="item in zhanghuoptions"
+                                     :key="item.id"
+                                     :label="item.a_users"
+                                     :value="item.id">
                              </el-option>
                          </el-select>
                      </div>
@@ -53,41 +53,67 @@
 
          </el-row>
          <div style="text-align:center;">
-             <el-button size="mini" type="primary" @click="gojiexi">确 定</el-button>
+             <el-button size="mini" type="primary" @click="gojiexi()">确 定</el-button>
              <el-button size="mini" @click="clear">清空内容</el-button>
          </div>
  </el-row>
 </template>
 <script>
 import {mapGetters} from 'vuex';
+import {  place_advertiser_list,place_to_advertise,place_account_domain,add_jiexi_url } from '@/api/acount';
 export default {
     data() {
         return{
             tuiguang:{
                 value:'',
+                value1:'',
                 usrName:'',
                 domain:'',
                 coment:'',
             },
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-            }, {
-                value: '选项2',
-                label: '双皮奶'
-            }, {
-                value: '选项3',
-                label: '蚵仔煎'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
-            }],
+            companyoptions:[],
+            zhanghuoptions:[],
             urlrequest:[''],
             defaultContent:'解析格式：\n产品名；前缀；主域；投放方式；客户ip地址',
-
+            place_advertiser_list(){
+                place_advertiser_list({
+                }).then(response => {
+                   this.companyoptions=response.data;
+                   
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            place_to_advertise(){
+                place_to_advertise({
+                    av_id:this.tuiguang.value
+                }).then(response => {
+                    console.log(response.data)
+                   this.zhanghuoptions=response.data.data;
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            add_jiexi_url(){
+                add_jiexi_url({
+                    account_id:this.tuiguang.value1,
+                    note:this.tuiguang.coment,
+                    submitusers:this.user.id
+                }).then(response => {
+                    console.log(response.data)
+                    this.tuiguang={
+                                    value:'',
+                                    value1:'',
+                                    usrName:'',
+                                    domain:'',
+                                    coment:'',
+                                },
+                    this.$message.success('需求添加成功');
+                   this.zhanghuoptions=response.data.data;
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
 
 
         }
@@ -99,14 +125,24 @@ export default {
 //            upload,
     },
     mounted(){
-
+        this.place_advertiser_list();
+        
     },
     methods:{
 
-
+        //客户change
+        kehuchange(){
+            this.place_to_advertise()
+        },
         //清空需求内容
         clear(){
-
+            this.tuiguang={
+                value:'',
+                value1:'',
+                usrName:'',
+                domain:'',
+                coment:'',
+            }
         },
         //添加url解析
         addurlEvent(){
@@ -114,7 +150,12 @@ export default {
         },
         /* 二级域名解析 */
         gojiexi(){
-
+            if(this.tuiguang.value1&&this.tuiguang.value&&this.tuiguang.coment){
+                this.add_jiexi_url();
+            }else{
+                 this.$message.error('信息没有添加完成');
+            }
+            
         },
     },
     computed:{
