@@ -27,7 +27,7 @@ SET_ROLES: (state, roles) => {
 
 actions: {
     // 邮箱登录
-    getLogin({ commit, state }, userInfo) {
+    getLogin({ commit }, userInfo) {
         return new Promise((resolve, reject) => {
             getInfo(userInfo).then(response => {
                 if(response.code == 200){
@@ -57,24 +57,14 @@ actions: {
     });
     },
     // 登出
-    LogOut({ commit, state }) {
+    LogOut({ commit }) {
         commit('SET_TOKEN', '');
         Cookies.remove('CRM-Token');
         // Cookies.remove('SET_ROLES');
         localStorage.removeItem('SET_ROLES');
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
                 resolve()
             });
-        // return new Promise((resolve, reject) => {
-        //   logout(state.token).then(() => {
-        //     commit('SET_TOKEN', '');
-        //     commit('SET_ROLES', []);
-        //     Cookies.remove('X-Ivanka-Token');
-        //     resolve();
-        //   }).catch(error => {
-        //     reject(error);
-        //   });
-        // });
     },
 }
 };

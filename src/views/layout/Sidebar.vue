@@ -15,10 +15,8 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex';
     import {  AppMain } from '@/views/layout';
     import SidebarItem from './SidebarItem';
-    import Cookies from 'js-cookie';
     export default {
         data(){
 

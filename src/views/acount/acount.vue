@@ -166,15 +166,15 @@
                 this.fileName = file.name
                 this.form.key = file.name
             },
-            handleProgress (event, file, fileList) {
-                this.loaded = (event.loaded / 1000000).toFixed(2)
-                this.fileSize = (event.total / 1000000).toFixed(2)
+            handleProgress (event) {
+                this.loaded = (event.loaded / 1000000).toFixed(2);
+                this.fileSize = (event.total / 1000000).toFixed(2);
                 this.percent = (event.loaded / event.total * 100).toFixed(2)
             },
-            handleSuccess (response, file, fileList) {
+            handleSuccess () {
                 this.result = '上传成功'
             },
-            handleError (error, response, file) {
+            handleError (error) {
                 this.result = error.toString()
             },
 
