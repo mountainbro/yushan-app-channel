@@ -47,11 +47,7 @@
                                   placeholder="请输入内容"></el-input>
                     </div>
                     <div class="lis" >
-                        <span style="vertical-align: top;">上传素材包：</span>
-                        <el-upload style="display: inline-block;" :on-success="upsuccess" class="upload-demo" action="/demand/uploadF" :on-change="handleChange">
-                            <el-button size="mini" style="margin-left: 15px;" type="primary">选择上传文件</el-button>
-                            <div slot="tip" style="margin-left: 15px;" class="el-upload__tip">只能上传zip文件</div>
-                        </el-upload>
+                        <upload ref="child" @successupload='successupload'></upload>
                     </div>
                 </div>
             </el-col>
@@ -85,7 +81,7 @@
 <script>
 import {mapGetters} from 'vuex';
 import {  place_advertiser_list,place_to_advertise,place_account_domain,create_page_task } from '@/api/acount';
-
+       import upload from '../..//upload/upload';
 export default {
     data() {
         return{
@@ -96,6 +92,7 @@ export default {
                 usrName:'',
                 domain:'',
                 coment:'',
+                key:'',
             },
             companyoptions:[],
             zhanghuoptions:[],
@@ -136,7 +133,7 @@ export default {
                 create_page_task({
                     account:this.tuiguang.value1,
                     domain:this.tuiguang.value1,
-                    zip_link:"git",
+                    zip_link:this.tuiguang.key,
                     submitusers:this.user.id,
                     note:this.tuiguang.coment,
                 }).then(response => {
@@ -148,6 +145,7 @@ export default {
                             usrName:'',
                             domain:'',
                             coment:'',
+                            key:'',
                         }
                         this.$message.success('添加需求成功');
                 }).catch(err => {
@@ -160,7 +158,7 @@ export default {
 
     },
     components: {
-//            upload,
+           upload,
 
     },
     mounted(){
@@ -170,6 +168,7 @@ export default {
 
     },
     methods:{
+   
         //客户change
         kehuchange(){
             this.place_to_advertise()
@@ -203,12 +202,20 @@ export default {
         },
         //上线推广
         goTuiGuang(){
-            if(this.tuiguang.value1&&this.tuiguang.value&&this.tuiguang.value2){
-                this.create_page_task()
+            this.$refs.child.submitUpload();
+            let _this =this;
+            setTimeout(()=>{
+                if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2){
+                _this.create_page_task()
             }else{
-                this.$message.error('信息没有添加完成');
+                _this.$message.error('信息没有添加完成');
             }
-            
+        
+            },1000)
+        },
+        successupload(val){
+            this.tuiguang.key = val.key;
+           console.log(val)
         },
         //添加url解析
         addurlEvent(){

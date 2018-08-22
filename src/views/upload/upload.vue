@@ -62,11 +62,12 @@
             submitUpload() {
                 this.$refs.upload.submit();
             },
-            handleSuccess () {
+            handleSuccess (val) {
                 this.$message({
                     message: '文件上传成功',
                     type: 'success'
                 });
+                 this.$emit('successupload',val);
 //                this.result = '上传成功'
             },
             handleError (error) {
