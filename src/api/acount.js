@@ -25,3 +25,11 @@ export function place_account_domain(data) {
         params: data
     });
 }
+//上传七牛获取token
+export function getuptoken(data) {
+    return fetch({
+        url: '/api/public/getuptoken',
+        method: 'get',
+        params: data
+    });
+}

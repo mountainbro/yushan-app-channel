@@ -3,30 +3,8 @@
        <el-col :span="24" class="acount_title">
            账户列表
        </el-col>
-       <el-col :span="24" class="search">
-           <el-input v-model="search" size="mini" style="width: 200px"></el-input>
-           <span class="name">按客户查看:</span>
-           <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
-               <el-option
-                       v-for="item in options"
-                       :key="item.id"
-                       :label="item.advertiser"
-                       :value="item.id">
-               </el-option>
-           </el-select>
-       </el-col>
-       <el-upload action='http://upload-z1.qiniu.com'
-                  :show-file-list='showUploadList'
-                  :on-progress="handleProgress"
-                  :on-success="handleSuccess"
-                  :on-error="handleError"
-                  :before-upload="beforeUpload"
-                  :data='form'>
-           <el-button size="small" type="primary">点击上传</el-button>
-       </el-upload>
-       <b>选择文件</b>：{{ fileName }}<br/>
-       <b>上传进度</b>：{{ loaded }} MB / {{ fileSize }} MB, {{ percent }}%<br/>
-       <b>上传结果</b>：{{ result }}<br/>
+       <search @searchChange="searchChange" @acountChange="acountChange"></search>
+       <!--<upload ref="child"></upload>-->
        <el-col :span="24">
            <el-table
                    v-loading="loading"
@@ -83,29 +61,15 @@
 <script>
     import { mapGetters } from 'vuex';
     import {  place_advertiser_list,place_to_advertise } from '@/api/acount';
-    const moment = require('moment');
-    import config from '../config/config'
+    //    import upload from '../upload/upload';
+        import search from '../search/search';
 
+    const moment = require('moment');
     export default {
         data(){
             return {
-                search:'',
-                acountselect:'',
-                options:[],
+                searchText:'',
                 loading:true,
-// 上传
-                form: {
-                    token: config.uptoken,
-                    key: null
-                },
-                showUploadList: false,
-                fileName: '',
-                fileSize: '',
-                loaded: '',
-                percent: '',
-                result: '',
-
-
 //分页
                 acountTable:[],
                 av_id:'',
@@ -114,22 +78,15 @@
                 pageIndex:1,
                 pageSize:20,
                 kehuTableLength:0,
-// 下拉列表
-                place_advertiser_list(){
-                    place_advertiser_list({
-                    }).then(response => {
-                        this.options = response.data;
-                    }).catch(err => {
-                        this.$message.error(err);
-                    });
-                },
+
+
 // 账户管理表格
                 place_to_advertise(){
                     place_to_advertise({
                         av_id:this.av_id,
                         page:this.page,
                         num:this.num,
-                        search:this.search,
+                        search:this.searchText,
                     }).then(response => {
                         this.loading = false;
                         this.acountTable = response.data.data;
@@ -138,16 +95,14 @@
                         this.$message.error(err);
                     });
                 },
+
             }
         },
-        created(){
-            let _this = this;
-            document.onkeydown = function(e){
-                if(e.which == '13'){
-                    _this.place_to_advertise();
-                }
-            }
+        components: {
+//            upload,
+            search
         },
+
         computed: {
             ...mapGetters([
 
@@ -155,32 +110,22 @@
         },
         mounted(){
 
-
-            this.place_advertiser_list();
             this.place_to_advertise();
+
         },
         methods: {
-
-// 上传
-            beforeUpload (file) {
-                this.fileName = file.name
-                this.form.key = file.name
-            },
-            handleProgress (event) {
-                this.loaded = (event.loaded / 1000000).toFixed(2);
-                this.fileSize = (event.total / 1000000).toFixed(2);
-                this.percent = (event.loaded / event.total * 100).toFixed(2)
-            },
-            handleSuccess () {
-                this.result = '上传成功'
-            },
-            handleError (error) {
-                this.result = error.toString()
-            },
-
-            acountAcount(){
-                this.av_id = this.acountselect;
+// 调取子组件
+//            btn(){
+//                this.$refs.child.submitUpload()
+//            },
+            searchChange(val){
                 this.loading = true;
+                this.searchText = val;
+                this.place_to_advertise();
+            },
+            acountChange(val){
+                this.loading = true;
+                this.av_id = val;
                 this.place_to_advertise();
             },
 //分页
