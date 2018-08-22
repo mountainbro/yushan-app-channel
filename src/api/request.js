@@ -1,5 +1,5 @@
 import { fetch } from '@/utils/fetch';
-//获取账户下二级域名列表
+//历史申请-------------------------------------------获取账户下二级域名列表
 export function domain_list(data) {
     return fetch({
         url: '/domain_list',
@@ -31,4 +31,11 @@ export function upyumingstatus(data) {
         data:  data,
     });
 }
-
+//获取账户下落地页
+export function page_list(data) {
+    return fetch({
+        url: '/page_list',
+        method: 'get',
+        params: data
+    });
+}

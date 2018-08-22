@@ -2,12 +2,12 @@
     <el-row class="requestapply" >
         <div class="hio">
             <!-- 切换table列表 -->
-            <div>
-                <el-radio-group v-model="chooseData" >
+
+                <el-radio-group v-model="chooseData" @change="radioChange">
                     <el-radio-button label="urlData">二级域名</el-radio-button>
                     <el-radio-button label="luodiData">落地页</el-radio-button>
                 </el-radio-group>
-            </div>
+
             <!-- 搜索框 -->
             <search @searchChange="searchChange" @acountChange="acountChange"></search>
             <!-- 表格数据展示 -->
@@ -176,7 +176,7 @@
 </template>
 <script>
  import {mapGetters} from 'vuex';
-import { domain_list,domain_shenhe1,domain_shenhe2,upyumingstatus} from '@/api/request';
+import { domain_list,domain_shenhe1,domain_shenhe2,upyumingstatus,page_list} from '@/api/request';
 import search from '../../search/search';
 import {  place_to_advertise } from '@/api/acount';
 const moment = require('moment');
@@ -185,12 +185,8 @@ export default {
     data() {
         return{
 
-// ----------------------------历史申请
             tableData1:[],
-            excelurl:'',
             tableshow:false,
-            currentPage1:1,
-            totalnum1:111,
             search1:'',
             chooseData:'urlData',
             av_id:'',
@@ -207,7 +203,7 @@ export default {
             pageIndex:1,
             pageSize:20,
             kehuTableLength:0,
-//请求落地页
+//请求二级域名
             domain_list(){
                 domain_list({
                     av_id:this.av_id,
@@ -262,7 +258,20 @@ export default {
                     this.$message.error(err);
                 });
             },
+//请求落地页
+            page_list(){
+                page_list({
+                    av_id:this.av_id,
+                    page:this.page,
+                    num:this.num,
+                    Search_str:this.search1,
+                }).then(response => {
+                    this.tableData1 =  response.data;
 
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
         }
     },
     created(){
@@ -277,6 +286,14 @@ export default {
         this.domain_list();
     },
     methods:{
+// 切换二级域和落地页
+        radioChange(){
+            if(this.chooseData == 'urlData'){
+                this.domain_list();
+            }else{
+
+            }
+        },
 //历史搜索-下拉
         searchChange(val){
             this.tableshow = true;
@@ -289,7 +306,7 @@ export default {
             this.domain_list();
         },
 
-//--------------------------------------------历史申请--------------------分页
+
         handleSizeChange(val) {
             this.page = val;
             this.pageSize =val;
@@ -331,75 +348,5 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-    @import "@/styles/table.scss";
-    .requestapply {
-       .main{
-           .lis{
-               padding: 12px 0  ;
-               span{
-                   display: inline-block;
-                   width: 90px;
-                   font-size: 14px;
-               }
-               .el-input,.el-textarea{
-                   vertical-align: top!important;
-                   display: inline-block;
-                   width:290px!important;
-               }
-               
-               .el-select__caret{
-                   line-height: 28px!important;
-               }
-               
 
-               
-           }
-           
-       }
-       .phone{
-           position: relative;
-            width: 33vw;
-            height: 59vh;
-            background:  url(http://test.myushan.com/821phone.png) no-repeat ;
-            background-size: 100% 100%;
-            .logo{
-                position: absolute;
-                width: 10%;
-                top: 7vh;
-                left: 6vw;
-            }
-            .banquan{
-                position: absolute;
-                left: 0;
-                right: 0;
-                font-size: 12px;
-                /* text-align: center; */
-                bottom: 18vh;
-                transform: scale(0.7);
-                -webkit-transform: scale(0.7);
-                margin-left: 3vw;
-            }
-            .rules{
-                padding-left:6vw;
-                padding-top: 9vh;
-                font-size: 14px;
-            }
-        }
-        .titles{
-            font-weight: 600;
-            color: black;
-        }
-        .redinfo{
-            font-size: 12px;
-            color: #F56C6C;
-        }
-        .urljiexi{
-            .addurl{
-                text-align:left;
-                cursor: pointer;
-            }
-        }
-    }
-</style>
 
