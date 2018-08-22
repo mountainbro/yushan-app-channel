@@ -1,7 +1,7 @@
 
 <template>
     <el-row >
-        <el-col :span="24" class="search">
+        <el-col :span="24" class="search_title">
             <el-input v-model="search" size="mini" style="width: 200px"></el-input>
             <span class="name">按客户查看:</span>
             <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
@@ -73,5 +73,14 @@
     }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-
+    .search_title {
+        height:40px;
+        line-height: 40px;
+        margin-bottom: 5px;
+        font-size: 14px;
+        .name {
+            margin-left: 20px;
+            margin-right: 10px;
+        }
+    }
 </style>

@@ -1,16 +1,12 @@
 <template>
-    <el-row class="requestapply" style="background:white;">
-        <el-tabs type="card" style="min-width: 900px;" v-model="activeName" @tab-click="handleClick()">
+    <el-row class="requestapply" >
+        <el-tabs type="card"  v-model="activeName" @tab-click="handleClick()">
             <el-tab-pane label="二级域名解析" class="tab_top" name="second">
                 <div class="menu" >
                     <el-row :gutter="20" class="urljiexi" >
                     <el-col :span="10" style="min-width:370px;">
                         <div class="main"> 
-                            
-                            <div class="lis" >
-                                <span>渠道</span>
-                                <el-input  style="min-width:290px;" size="mini" v-model="tuiguang.usrName" placeholder="请输入帐户名"></el-input>
-                            </div>
+
                             <div class="lis" >
                                 <span>选择客户：</span>
                                 <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
@@ -66,7 +62,6 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane  label="上线推广页面" class="tab_top" name="first">
-                <div class="menu">
                     <el-row :gutter="20">
                         <el-col :span="10">
                             <div class="main">
@@ -122,11 +117,11 @@
                                 </div>
                             </div>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="4">
                             <div class="titles">标准合规页面样例</div>
                             <div class="redinfo">注：需标准页面执行，否则不予上线</div>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="4">
                             
                             <div class="phone">
                                 <img class="logo" src="http://test.myushan.com//logo/black_zhiniao.png" alt="">
@@ -143,144 +138,205 @@
                         </el-col>
                         
                     </el-row>
-                    <div style="text-align:center;position:fixed;bottom:5vh;left:0;right:0;">
+                    <div style="text-align:center;position:fixed;left:0;right:0;">
                         <el-button size="mini" type="primary" @click="goTuiGuang">确 定</el-button>
                         <el-button size="mini" @click="clear">清空内容</el-button>
                     </div>
-                </div>
             </el-tab-pane>
             
             <el-tab-pane label="历史申请" class="tab_top" name="third">
-                <div class="menu">
+                <div class="hio">
                     <!-- 切换table列表 -->
                     <div>
-                        <el-radio-group v-model="chooseData" style="margin-bottom: 30px;">
+                        <el-radio-group v-model="chooseData" >
                             <el-radio-button label="urlData">二级域名</el-radio-button>
                             <el-radio-button label="luodiData">落地页</el-radio-button>
                         </el-radio-group>
                     </div>
                     <!-- 搜索框 -->
-                    <el-input size="mini" style="width: 35%;" v-model="lishi.search1" placeholder="搜索账户名">
-                        <el-button size="mini" slot="append" icon="el-icon-search" @click="searchinfo1"></el-button>
-                    </el-input>
-                    <div class="lis" style="display:inline-block;" >
-                        <span>客户：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.id"
-                            :label="item.advertiser"
-                            :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <el-button size="mini" type="primary" @click="searchHistory">查 询</el-button>
-                    <el-button size="mini" @click="reset">重 置</el-button>
-        
+                    <search @searchChange="searchChange" @acountChange="acountChange"></search>
                     <!-- 表格数据展示 -->
-                    <el-table v-loading="tableshow" :data="tableData1" class="vue-table" height="440"  border @sort-change="sortTable"  >
-                        <el-table-column prop="id" label="编号" sortable='custom' min-width="80">
-                        </el-table-column>
-                        <el-table-column  prop="sub_date" label="时间" sortable='custom' min-width="140">
-                            <template slot-scope="scope">
-                                  {{scope.row.ctime|timeFormat1}}  
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="客户" min-width="180">
+                    <el-col :span="24">
+                        <el-table
+                                v-loading="tableshow"
+                                :data="tableData1"
+                                class="vue-table"
+                                height="550"
+                                border
+                                @sort-change="sortTable"  >
+                            <el-table-column
+                                    prop="sub_date"
+                                    label="时间"
+                                    sortable='custom'>
                                 <template slot-scope="scope">
-                                        <span>{{scope.row.advertiser||"空"}}</span>
-                                    </template>
-                        </el-table-column>
-                        <el-table-column  label="帐户" min-width="180">
+                                    {{scope.row.ctime | filterDate}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="客户">
                                 <template slot-scope="scope">
-                                        <span>{{scope.row.a_users||"空"}}</span>
-                                    </template>
-                        </el-table-column>
-                        <el-table-column prop="true_url" label="需求类型" min-width="150" 
-                            :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
-                            :filter-method="filterHandler"
-                        >
-                            <template slot-scope="scope">
-                                <el-alert
-                                    :title="scope.row.true_url|requestStatus1"
-                                    :type="scope.row.true_url|statuss1"
-                                    :closable="false"
-                                    style="background-color: transparent;"
-                                    show-icon>
-                                </el-alert>
-                            </template>
-                        </el-table-column>
-                        <el-table-column  label="进度" min-width="100"
-                            :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
-                            :filter-method="filterHandler"
-                        >
-                            <template slot-scope="scope">
-                                <span>{{scope.row.prname||'空'}}</span>
-                            </template>
-                            
-                        </el-table-column>
-                        <el-table-column  label="审核状态" min-width="100"
-                            :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
-                            :filter-method="filterHandler"
-                        >
-                            <template slot-scope="scope">
-                                <span>{{scope.row.name||'空'}}</span>
-                            </template>
-                            
-                        </el-table-column>
-                        <el-table-column label="操作" style="" min-width="130" >
-                            <template>
-                                <span style="color:blue;cursor:pointer">查看</span>
-                            </template>
-                        </el-table-column>
-        
-                    </el-table>
-                    <!-- 表格分页 -->
-                    <el-pagination @size-change="handleSizeChange1" @current-change="handleCurrentChange1" :current-page="currentPage1" :page-sizes="[20, 30, 50]"
-                         layout="total, sizes, prev, pager, next, jumper" style="text-align: center;margin-top: 10px;"
-                        :total="totalnum1">
-                    </el-pagination>
+                                    <span>{{scope.row.advertiser||"空"}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="帐户" >
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.a_users||"空"}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="true_url"
+                                    label="域名">
+                                <template slot-scope="scope">
+                                    <el-alert
+                                            :title="scope.row.true_url"
+                                            :type="scope.row.true_url"
+                                            :closable="false"
+                                            style="background-color: transparent;"
+                                            show-icon>
+                                    </el-alert>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="进度" >
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.is_ultimate_shenhe == 0">处理中...</span>
+                                    <span v-if="scope.row.is_ultimate_shenhe == 1">已完成</span>
+                                    <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">驳回</span>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column
+                                    label="审核状态">
+                                <template slot-scope="scope">
+                                    <state :stateData=scope.row ></state>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="操作">
+                                <template slot-scope="scope">
+                                    <span @click="look_infor(scope.row)">查看</span>
+                                </template>
+                            </el-table-column>
+
+                        </el-table>
+                        <!-- 分页 -->
+                        <div class="block">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="pageIndex"
+                                    :page-sizes="[ 20, 30,40]"
+                                    :page-size="pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="kehuTableLength"
+                                    style='text-align: right;'>
+                            </el-pagination>
+                        </div>
+                    </el-col>
+
+
                     <!-- 新增需求 -->
-                    <!-- <el-dialog title="解析二级域名" :visible.sync="jiexiBol" width="40%" modal="true" lock-scroll="true" close-on-click-modal="true" close-on-press-escape="true">
-                        <div  class="lis">
-                            <strong><span>客户：</span></strong>
-                            {{jiexiInfo.advertiser||'空'}}
-                        </div>    
-                        <div class="lis">
-                            <strong><span>帐户:</span></strong>
-                            {{jiexiInfo.a_users||'空'}}
-                        </div>
-                        <div  class="lis">
-                            <strong><span>解析说明:</span></strong>
-                            {{jiexiInfo.note||'空'}}
-                        </div>
-                        <div  class="lis">
-                            <strong><span>主域：</span></strong>
-                            {{jiexiInfo.url||'空'}}
-                        </div>
-                        <div  class="lis">
-                            <strong><span>二级域名：</span></strong>
-                            <el-input style="width: 55%;" v-model="coment1" placeholder="写上解析好的二级域名"></el-input>
-                        </div>
+                    <el-dialog title="需求详情"  :visible.sync="jiexiBol"  :close-on-click-modal="false" @close="jiexiBol = false"  >
+                        <el-row v-for="item in shenheInfor">
+                            <el-col :span="24" >
+                               <el-col :span="4">
+                                   提交人:
+                               </el-col>
+                                <el-col :span="20">
+                                    {{item.name}}
+                                </el-col>
+                            </el-col>
+                            <el-col :span="24" >
+                                <el-col :span="4">
+                                    客户:
+                                </el-col>
+                                <el-col :span="20">
+                                    {{item.advertiser}}
+                                </el-col>
+                            </el-col>
+                            <el-col :span="24" >
+                                <el-col :span="4">
+                                    账户:
+                                </el-col>
+                                <el-col :span="20">
+                                    {{item.a_users}}
+                                </el-col>
+                            </el-col>
+                            <el-col :span="24" >
+                                <el-col :span="4">
+                                    解析备注:
+                                </el-col>
+                                <el-col :span="20">
+                                    {{item.note}}
+                                </el-col>
+                            </el-col>
+                            <el-col :span="24" >
+                                <el-col :span="4">
+                                    审核:
+                                </el-col>
+                                <el-col :span="20">
+                                    <el-radio-group v-model="shenhe_radio">
+                                        <el-radio :label="1">通过</el-radio>
+                                        <el-radio :label="2">驳回</el-radio>
+                                    </el-radio-group>
+                                </el-col>
+                            </el-col>
+                            <el-col :span="24" v-if="shenheInfor[0].audit_count == 1 && shenheInfor[0].audit == 1 && shenhe_radio == 1" >
+                                <el-col :span="4">
+                                    域名:
+                                </el-col>
+                                <el-col :span="20">
+                                   <el-input v-model="yuming_text" ></el-input>
+                                </el-col>
+                            </el-col>
+                            <el-col :span="24" v-if="shenheInfor[0].audit_count == 1 && shenheInfor[0].audit == 1 && shenhe_radio == 1" >
+                                <el-col :span="4">
+                                    IP:
+                                </el-col>
+                                <el-col :span="20">
+                                    <el-input v-model="IP_text" ></el-input>
+                                </el-col>
+                            </el-col>
+
+                            <el-col :span="24">
+                                <el-col :span="4">
+                                    审核备注:
+                                </el-col>
+                                <el-col :span="20">
+                                    <el-input
+                                            type="textarea"
+                                            :rows="2"
+                                            placeholder="请输入内容"
+                                            v-model="textarea_note">
+                                    </el-input>
+                                </el-col>
+                            </el-col>
+                        </el-row>
+
                         <span slot="footer" class="dialog-footer">
                             <el-button size="mini"@click="jiexiBol = false">取 消</el-button>
-                            <el-button size="mini"type="primary" @click="jiexiEvent">确 定</el-button>
+                            <el-button size="mini"type="primary" @click="push_shenhe">确 定</el-button>
                         </span>
-                    </el-dialog> -->
+                    </el-dialog>
                 </div>
             </el-tab-pane>
         </el-tabs>
     </el-row>
 </template>
 <script>
-import { domain_list } from '@/api/request';
-import {  place_advertiser_list,place_to_advertise } from '@/api/acount';
+ import {mapGetters} from 'vuex';
+import { domain_list,domain_shenhe1,domain_shenhe2,upyumingstatus} from '@/api/request';
+import search from '../search/search';
+import {  place_to_advertise } from '@/api/acount';
+const moment = require('moment');
+import state from './sh_state';
 export default {
     data() {
         return{
             newTask:true,
             tableData:[],
-            activeName:'first',
+            activeName:'third',
             tuiguang:{
                 value:'',
                 usrName:'',
@@ -305,34 +361,110 @@ export default {
             }],
             urlrequest:[''],
             defaultContent:'解析格式：\n产品名；前缀；主域；投放方式；客户ip地址',
-            // 历史申请
+
+
+
+// ----------------------------历史申请
             tableData1:[],
             excelurl:'',
             tableshow:false,
             currentPage1:1,
             totalnum1:111,
-            lishi:{
-                search1:'',
-                timeChoose1:'',
-                valuestatus:'',
-
-            },
+            search1:'',
             chooseData:'urlData',
             av_id:'',
-            pageSize1:20,
+// 弹窗
+            shenheInfor:[],
+            jiexiBol:false,
+            shenhe_radio:1,
+            textarea_note:'',
+            yuming_text:'',
+            IP_text:'',
+// 分页
+            page:'20',
+            num:'1',
+            pageIndex:1,
+            pageSize:20,
+            kehuTableLength:0,
+//请求落地页
+            domain_list(){
+                domain_list({
+                    av_id:this.av_id,
+                    page:this.page,
+                    num:this.num,
+                    Search_str:this.search1,
+                }).then(response => {
+                   this.tableData1 =  response.data;
+
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+// 审核通过
+            domain_shenhe(){
+                if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 0 ){
+                    domain_shenhe1({
+                        id:this.shenheInfor[0].id,
+                        audit:this.shenhe_radio,
+                        auditu:this.user.id,
+                        note:this.textarea_note,
+                    }).then(response => {
+                        this.jiexiBol = false;
+                        this.domain_list();
+                    }).catch(err => {
+                        this.$message.error(err);
+                    });
+                }else  if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 1 ){
+                    domain_shenhe2({
+                        id:this.shenheInfor[0].id,
+                        audit:this.shenhe_radio,
+                        auditu:this.user.id,
+                        note:this.textarea_note,
+                    }).then(response => {
+                        this.jiexiBol = false;
+                        this.upyumingstatus()
+                    }).catch(err => {
+                        this.$message.error(err);
+                    });
+                }
+
+
+
+
+            },
+//添加需二审求
+            upyumingstatus(){
+                upyumingstatus({
+                    id:this.shenheInfor[0].id,
+                    true_url:this.yuming_text,
+                    ip:this.IP_text,
+                }).then(response => {
+                    this.jiexiBol = false;
+                    this.domain_list();
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
 
         }
     },
     created(){
 
     },
+    components: {
+//            upload,
+        state,
+        search
+    },
     mounted(){
-        this.place_advertiser_list();
         this.domain_list();
     },
     methods:{
         //tab切换事件
         handleClick(){
+            if(this.activeName == 'third'){
+                this.domain_list();
+            }
         },
         //上传压缩包
         upsuccess(){
@@ -362,86 +494,69 @@ export default {
         searchinfo1(){
 
         },
-        timeChooseEvent1(){
-
-        },
-        statusChange(){
-
-        },
-        daochu(){
-
-        },
         sortTable(){
 
         },
-        handleSizeChange1(val) {
-            this.pageSize1 = val;
-            // this.tableshow = true;
-            // this.tabledata1();
-            console.log(`每页 ${val} 条`);
+//历史搜索-下拉
+        searchChange(val){
+            this.tableshow = true;
+            this.search1 = val;
+            this.domain_list();
         },
-        handleCurrentChange1(val) {
-            this.currentPage1 = val;
-            // this.tableshow = true;
-            // this.tabledata1();
-            console.log(`当前页: ${val}`);
+        acountChange(val){
+            this.tableshow = true;
+            this.av_id = val;
+            this.domain_list();
         },
-        filterHandler(value, row, column) {
-            const property = column['property'];
-            return row[property] === value;
-        },
-        searchHistory(){
 
-        },
-        reset(){
 
-        },
-        //请求二级域民
-        askurl(){
 
-        },
-        //请求落地页
-        domain_list(){
-            domain_list({
-                av_id:this.av_id,
-                page:this.currentPage1,
-                num:this.pageSize1,
-                Search_str:this.lishi.search1,
-            }).then(response => {
 
-            }).catch(err => {
-                this.$message.error(err);
-            });
+//--------------------------------------------历史申请--------------------分页
+        handleSizeChange(val) {
+            this.page = val;
+            this.pageSize =val;
+            this.loading = true;
+            this.place_to_advertise()
         },
-        // 下拉列表
-        place_advertiser_list(){
-            place_advertiser_list({
-            }).then(response => {
-                this.options = response.data;
-            }).catch(err => {
-                this.$message.error(err);
-            });
+        handleCurrentChange(val) {
+            this.num = val;
+            this.loading = true;
+            this.place_to_advertise()
         },
+//弹窗
+        look_infor(val){
+            this.shenheInfor = [];
+            this.shenheInfor.push(val);
+            this.jiexiBol = true;
+        },
+        push_shenhe(){
+            this.domain_shenhe()
+        },
+
+
+
+
    
         
         
     },
     filters:{
-
+        filterDate: function (val) {
+            var time=new Date(parseInt(val) * 1000);
+            return   moment(time).format('YYYY-MM-DD HH:mm:ss')
+        }
     },
     computed:{
-
+        ...mapGetters([
+            'user',
+        ])
     }
 }
 </script>
 <style lang="scss" scoped>
     @import "@/styles/table.scss";
     .requestapply {
-        padding: 12px 25px;
-        .menu{
-            padding: 9px 0;
-            height: 60vh;
-        }
        .main{
            .lis{
                padding: 12px 0  ;
@@ -507,9 +622,6 @@ export default {
                 text-align:left;
                 cursor: pointer;
             }
-        }
-        .vue-table{
-            margin-top: 30px!important;
         }
     }
 </style>
