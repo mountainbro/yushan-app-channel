@@ -2,7 +2,7 @@
 <template>
     <el-row >
         <el-col :span="24" class="search_title">
-            <el-input v-model="search" size="mini" style="width: 200px"></el-input>
+            <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;"></input>
             <span class="name">按客户查看:</span>
             <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
                 <el-option
@@ -40,14 +40,6 @@
                 },
             }
         },
-        created(){
-            let _this = this;
-            document.onkeydown = function(e){
-                if(e.which == '13'){
-                    _this.search_change();
-                }
-            }
-        },
         mounted() {
             this.place_advertiser_list();
         },
@@ -55,9 +47,10 @@
 
         },
         methods: {
-            search_change(){
+            searchDown(){
                 this.$emit('searchChange',this.search);
             },
+
             acountAcount(){
 
                 this.$emit('acountChange',this.acountselect);

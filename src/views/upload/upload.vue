@@ -50,7 +50,7 @@
 
 // 上传
             beforeUpload (file) {
-                this.fileName = file.name
+                this.fileName = file.name;
                 this.form.key = file.name
             },
  //文件上传时 的钩子   :on-progress="handleProgress"

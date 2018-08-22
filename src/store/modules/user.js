@@ -8,6 +8,7 @@ const user = {
         user: JSON.parse(localStorage.getItem('CRM-User') || '{}'),
         token: Cookies.get('CRM-Token'),
         roles:JSON.parse(localStorage.getItem('SET_ROLES') || '{}'),
+        roleName:JSON.parse(localStorage.getItem('SET_ROLENAME') || '{}'),
     },
 
     mutations: {
@@ -23,6 +24,10 @@ SET_ROLES: (state, roles) => {
     localStorage.setItem('SET_ROLES', JSON.stringify(roles));
     state.roles = roles;
 },
+SET_ROLENAME:(state, rolesname) => {
+    localStorage.setItem('SET_ROLENAME', JSON.stringify(rolesname));
+    state.roles = rolesname;
+},
 },
 
 actions: {
@@ -35,7 +40,10 @@ actions: {
             commit('SET_USER', userInfoData);
             commit('SET_TOKEN', userInfoData.auth_key);
             const roles = response.auth;
+            const rolesname = response.roles;
             commit('SET_ROLES',roles);
+            commit('SET_ROLENAME',rolesname);
+
             permission.init({ // 初始化权限
                 roles: roles,
                 router: router.options.routes

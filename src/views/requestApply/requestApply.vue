@@ -50,7 +50,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
+<style rel="stylesheet/scss"  lang="scss">
     @import "@/styles/table.scss";
     .requestapply {
        .main{

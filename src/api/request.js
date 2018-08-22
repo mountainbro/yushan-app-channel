@@ -39,3 +39,28 @@ export function page_list(data) {
         params: data
     });
 }
+//媒介落地页1审
+export function page_shenhe1(data) {
+    return fetch({
+        url: '/page_shenhe1?id='+data.id,
+        method: 'post',
+        data:  data,
+    });
+}
+//落地页2审
+export function page_shenhe2(data) {
+    return fetch({
+        url: '/page_shenhe2?id='+data.id,
+        method: 'post',
+        data:  data,
+    });
+}
+//落地页二审
+export function upyestatus(data) {
+    return fetch({
+        url: 'api/qudaoapi/upyestatus?id='+data.id,
+        method: 'post',
+        data:  data,
+    });
+}
+//
