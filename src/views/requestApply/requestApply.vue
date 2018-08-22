@@ -152,6 +152,13 @@
             
             <el-tab-pane label="历史申请" class="tab_top" name="third">
                 <div class="menu">
+                    <!-- 切换table列表 -->
+                    <div>
+                        <el-radio-group v-model="chooseData" style="margin-bottom: 30px;">
+                            <el-radio-button label="urlData">二级域名</el-radio-button>
+                            <el-radio-button label="luodiData">落地页</el-radio-button>
+                        </el-radio-group>
+                    </div>
                     <!-- 搜索框 -->
                     <el-input size="mini" style="width: 35%;" v-model="lishi.search1" placeholder="搜索账户名">
                         <el-button size="mini" slot="append" icon="el-icon-search" @click="searchinfo1"></el-button>
@@ -161,9 +168,9 @@
                         <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
                             <el-option
                             v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            :key="item.id"
+                            :label="item.advertiser"
+                            :value="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -266,6 +273,8 @@
     </el-row>
 </template>
 <script>
+import { domain_list } from '@/api/request';
+import {  place_advertiser_list,place_to_advertise } from '@/api/acount';
 export default {
     data() {
         return{
@@ -308,43 +317,18 @@ export default {
                 valuestatus:'',
 
             },
-            pickerOptions: {
-                disabledDate(time){
-                    return time.getTime() >= Date.now() ;
-                },
-                shortcuts: [{
-                    text: '最近一周',
-                    onClick(picker) {
-                        const end = new Date();
-                        const start = new Date();
-                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                        picker.$emit('pick', [start, end]);
-                    }
-                }, {
-                    text: '最近一个月',
-                    onClick(picker) {
-                        const end = new Date();
-                        const start = new Date();
-                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                        picker.$emit('pick', [start, end]);
-                    }
-                }, {
-                    text: '最近三个月',
-                    onClick(picker) {
-                        const end = new Date();
-                        const start = new Date();
-                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                        picker.$emit('pick', [start, end]);
-                    }
-                }]
-            },
+            chooseData:'urlData',
+            av_id:'',
+            pageSize1:20,
+
         }
     },
     created(){
 
     },
     mounted(){
-
+        this.place_advertiser_list();
+        this.domain_list();
     },
     methods:{
         //tab切换事件
@@ -390,11 +374,17 @@ export default {
         sortTable(){
 
         },
-        handleSizeChange1(){
-
+        handleSizeChange1(val) {
+            this.pageSize1 = val;
+            // this.tableshow = true;
+            // this.tabledata1();
+            console.log(`每页 ${val} 条`);
         },
-        handleCurrentChange1(){
-
+        handleCurrentChange1(val) {
+            this.currentPage1 = val;
+            // this.tableshow = true;
+            // this.tabledata1();
+            console.log(`当前页: ${val}`);
         },
         filterHandler(value, row, column) {
             const property = column['property'];
@@ -406,6 +396,33 @@ export default {
         reset(){
 
         },
+        //请求二级域民
+        askurl(){
+
+        },
+        //请求落地页
+        domain_list(){
+            domain_list({
+                av_id:this.av_id,
+                page:this.currentPage1,
+                num:this.pageSize1,
+                Search_str:this.lishi.search1,
+            }).then(response => {
+
+            }).catch(err => {
+                this.$message.error(err);
+            });
+        },
+        // 下拉列表
+        place_advertiser_list(){
+            place_advertiser_list({
+            }).then(response => {
+                this.options = response.data;
+            }).catch(err => {
+                this.$message.error(err);
+            });
+        },
+   
         
         
     },
@@ -418,6 +435,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    @import "@/styles/table.scss";
     .requestapply {
         padding: 12px 25px;
         .menu{
