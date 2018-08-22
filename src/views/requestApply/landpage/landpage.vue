@@ -7,34 +7,34 @@
                     <!-- <div class="titles">上传素材</div>    -->
                     <div class="lis" >
                         <span>选择客户：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
+                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择"  @change="kehuchange">
                             <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
+                                    v-for="item in companyoptions"
+                                    :key="item.id"
+                                     :label="item.advertiser"
+                                     :value="item.id">
                             </el-option>
                         </el-select>
                     </div>
                     <div class="lis" >
                         <span>选择账户：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
+                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择" @change="zhanghuchange">
                             <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
+                                    v-for="item in zhanghuoptions"
+                                    :key="item.id"
+                                     :label="item.a_users"
+                                     :value="item.id">
                             </el-option>
                         </el-select>
                     </div>
                     <div class="lis" >
                         <span>二级域名：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择">
+                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择">
                             <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
+                                    v-for="item in urloptions"
+                                    :key="item.id"
+                                    :label="item.true_url"
+                                    :value="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -77,42 +77,83 @@
 
         </el-row>
         <div style="text-align:center;position:fixed;left:0;right:0;">
-            <el-button size="mini" type="primary" @click="goTuiGuang">确 定</el-button>
+            <el-button size="mini" type="primary" @click="goTuiGuang()">确 定</el-button>
             <el-button size="mini" @click="clear">清空内容</el-button>
         </div>
     </el-row>
 </template>
 <script>
 import {mapGetters} from 'vuex';
-
+import {  place_advertiser_list,place_to_advertise,place_account_domain,create_page_task } from '@/api/acount';
 
 export default {
     data() {
         return{
             tuiguang:{
                 value:'',
+                value1:'',
+                value2:'',
                 usrName:'',
                 domain:'',
                 coment:'',
             },
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-            }, {
-                value: '选项2',
-                label: '双皮奶'
-            }, {
-                value: '选项3',
-                label: '蚵仔煎'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
-            }],
+            companyoptions:[],
+            zhanghuoptions:[],
+            urloptions:[],
             urlrequest:[''],
             defaultContent:'解析格式：\n产品名；前缀；主域；投放方式；客户ip地址',
+            place_advertiser_list(){
+                place_advertiser_list({
+                }).then(response => {
+                   this.companyoptions=response.data;
+                   
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            place_to_advertise(){
+                place_to_advertise({
+                    av_id:this.tuiguang.value
+                }).then(response => {
+                    console.log(response.data)
+                   this.zhanghuoptions=response.data.data;
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            place_account_domain(){
+                place_account_domain({
+                    id:this.tuiguang.value1
+                }).then(response => {
+                    console.log(response.data)
+                   this.urloptions=response.data;
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            create_page_task(){
+                console.log(this.tuiguang);
+                create_page_task({
+                    account:this.tuiguang.value1,
+                    domain:this.tuiguang.value1,
+                    zip_link:"git",
+                    submitusers:this.user.id,
+                    note:this.tuiguang.coment,
+                }).then(response => {
+                    console.log(response.data)
+                    this.tuiguang ={
+                            value:'',
+                            value1:'',
+                            value2:'',
+                            usrName:'',
+                            domain:'',
+                            coment:'',
+                        }
+                        this.$message.success('添加需求成功');
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
         }
     },
     created(){
@@ -123,9 +164,20 @@ export default {
 
     },
     mounted(){
+        console.log(this.user.id);
+        this.place_advertiser_list();
+        
 
     },
     methods:{
+        //客户change
+        kehuchange(){
+            this.place_to_advertise()
+        },
+        //账户change
+        zhanghuchange(){
+            this.place_account_domain();
+        },
         //tab切换事件
         handleClick(){
 
@@ -140,11 +192,23 @@ export default {
         },
         //清空需求内容
         clear(){
-
+            this.tuiguang ={
+                value:'',
+                value1:'',
+                value2:'',
+                usrName:'',
+                domain:'',
+                coment:'',
+            }
         },
         //上线推广
         goTuiGuang(){
-
+            if(this.tuiguang.value1&&this.tuiguang.value&&this.tuiguang.value2){
+                this.create_page_task()
+            }else{
+                this.$message.error('信息没有添加完成');
+            }
+            
         },
         //添加url解析
         addurlEvent(){
