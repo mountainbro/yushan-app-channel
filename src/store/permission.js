@@ -1,4 +1,3 @@
-import {roleType} from '../utils/constant';
 
 const permission = {
     state: {

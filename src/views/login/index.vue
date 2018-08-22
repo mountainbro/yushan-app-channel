@@ -26,8 +26,7 @@
 </template>
 
 <script>
-    import { mapGetters,mapActions } from 'vuex';
-    import {  getInfo } from '@/api/login';
+    import { mapActions } from 'vuex';
     export default {
         data() {
             return {
@@ -73,11 +72,6 @@
                         });
                     }
                 });
-
-
-//                this.getInfo();
-//
-//                this.$router.push({ name: 'demo1' })
             },
         },
         destroyed() {

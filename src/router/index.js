@@ -13,7 +13,6 @@ import requestApply from '../views/requestApply/requestApply';
 
 import demo1_1 from '../views/demo/demo1_1';
 import demo1 from '../views/demo/demo1';
-import demo2 from '../views/demo/demo2';
 import demo3 from '../views/demo/demo3';
 
 Vue.use(Router);
