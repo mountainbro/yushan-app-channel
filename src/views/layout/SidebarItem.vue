@@ -21,7 +21,7 @@
                                     v-if="!child1.hidden"
                                          :to="{name:child1.name}">
                                 <el-menu-item :index="child1.name">
-                                    {{item.meta.title}}
+                                    {{child1.meta.title}}
                                 </el-menu-item>
 
                             </router-link>

@@ -38,13 +38,14 @@ export const constantRouterMap = [
         children: [
             {
                 path: 'list',
-                meta: {title: '首页'},
+                meta: {title: '账户管理'},
                 component: acount,
                 name: '/acount',
             },
             {
                 path: 'demo01',
                 component: demo1_1,
+                meta: {title: 'demo'},
                 name: 'demo01',
             },
         ]
