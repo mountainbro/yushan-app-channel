@@ -43,11 +43,12 @@
                         <el-input size="mini" v-model="tuiguang.coment"
                                   type="textarea"
                                   style=""
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 6}"
                                   placeholder="请输入内容"></el-input>
                     </div>
                     <div class="lis" >
-                        <upload ref="child" @successupload='successupload'></upload>
+                        <span style="float:left;"> 素材包：</span>
+                        <upload style="float:left;margin-left:1em;" ref="child" @successupload='successupload'></upload>
                     </div>
                 </div>
             </el-col>
@@ -56,7 +57,7 @@
                 <div class="redinfo">注：需标准页面执行，否则不予上线</div>
             </el-col>
             <el-col :span="4">
-
+                <iframe src="" frameborder="0"></iframe>
                 <div class="phone">
                     <img class="logo" src="http://test.myushan.com//logo/black_zhiniao.png" alt="">
                     <div class="rules">
@@ -112,7 +113,6 @@ export default {
                 place_to_advertise({
                     av_id:this.tuiguang.value
                 }).then(response => {
-                    console.log(response.data)
                    this.zhanghuoptions=response.data.data;
                 }).catch(err => {
                     this.$message.error(err);
@@ -122,14 +122,12 @@ export default {
                 place_account_domain({
                     id:this.tuiguang.value1
                 }).then(response => {
-                    console.log(response.data)
                    this.urloptions=response.data;
                 }).catch(err => {
                     this.$message.error(err);
                 });
             },
             create_page_task(){
-                console.log(this.tuiguang);
                 create_page_task({
                     account:this.tuiguang.value1,
                     domain:this.tuiguang.value1,
@@ -137,7 +135,6 @@ export default {
                     submitusers:this.user.id,
                     note:this.tuiguang.coment,
                 }).then(response => {
-                    console.log(response.data)
                     this.tuiguang ={
                             value:'',
                             value1:'',
@@ -162,7 +159,6 @@ export default {
 
     },
     mounted(){
-        console.log(this.user.id);
         this.place_advertiser_list();
         
 
@@ -171,10 +167,14 @@ export default {
    
         //客户change
         kehuchange(){
+            this.tuiguang.value1 = '';
+            this.tuiguang.value2 = '';
             this.place_to_advertise()
+            
         },
         //账户change
         zhanghuchange(){
+            this.tuiguang.value2 = '';
             this.place_account_domain();
         },
         //tab切换事件
@@ -205,7 +205,7 @@ export default {
             this.$refs.child.submitUpload();
             let _this =this;
             setTimeout(()=>{
-                if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2){
+                if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2&&_this.tuiguang.key){
                 _this.create_page_task()
             }else{
                 _this.$message.error('信息没有添加完成');
@@ -215,7 +215,6 @@ export default {
         },
         successupload(val){
             this.tuiguang.key = val.key;
-           console.log(val)
         },
         //添加url解析
         addurlEvent(){
@@ -249,7 +248,7 @@ export default {
                padding: 12px 0  ;
                span{
                    display: inline-block;
-                   width: 90px;
+                //    width: 90px;
                    font-size: 14px;
                }
                .el-input,.el-textarea{
@@ -291,9 +290,12 @@ export default {
                 margin-left: 3vw;
             }
             .rules{
+                width: 12vw;
                 padding-left:6vw;
                 padding-top: 9vh;
-                font-size: 14px;
+                font-size: 12px;
+                line-height: 19px;
+                letter-spacing: 1px;
             }
         }
         .titles{
