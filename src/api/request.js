@@ -67,7 +67,7 @@ export function upyestatus(data) {
 // audit_history
 export function audit_history(data) {
     return fetch({
-        url: '/audit_history/'+data.id+'/'+'yuming ',
+        url: '/audit_history/'+data.id+'/'+data.name,
         method: 'get',
     });
 }

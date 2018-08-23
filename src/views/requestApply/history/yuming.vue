@@ -169,7 +169,7 @@
 
                         </div>
                         <div  v-if="role_name != '渠道'">
-                            <div :span="24" style="width:100%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
+                            <div :span="24" style="width:99%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
                             <div  style="padding: 0 20px"  v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
                                 <div   class="list">
                                     <div class="title">
@@ -295,6 +295,7 @@ export default {
                 console.log(this.shenheInfor[0].id)
                 audit_history({
                     id:this.shenheInfor[0].id,
+                    name:'yuming',
                 }).then(response => {
                         this.audit_historyList = response
                 }).catch(err => {
@@ -420,8 +421,8 @@ export default {
              this.IP_text = '';
              this.link_text = '';
              this.textarea_note = '';
-             this.audit_historyList = [];
             this.shenheInfor.push(val);
+            this.audit_historyList = [];
             this.audit_history();
             this.jiexiBol = true;
         },

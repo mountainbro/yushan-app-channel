@@ -136,9 +136,41 @@
                                    </span>
                                 </div>
                             </div>
+                            <div   class="list" v-if="audit_historyList.length !== 0">
+                                <div class="title">
+                                    审核备注:
+                                </div>
+                                <div class='right_title'>
+                                    <div  class="shenhe_note"   v-for="data in audit_historyList">
+                                        <div class="top_icon"></div>
+
+                                        <div class="box">
+                                            <div class="header" style=" color:rgb(163, 165, 167);">
+                        <span class="name">
+                            {{data.users0.name}}
+                        </span>
+                                                <span class="date">
+                           {{data.catated_at | filterDate }}
+                        </span>
+                                            </div>
+                                            <div class="note">
+                                                <div class="left_icon">
+
+                                                    <img src="../img/duigou.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type != 2">
+                                                    <img src="../img/cha.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type == 2">
+
+                                                </div>
+                                                <div class="right_note">
+                                                    {{data.note }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div >
+                                </div>
+                            </div>
                         </div>
                         <div  v-if="role_name != '渠道'">
-                            <div :span="24" style="width:100%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
+                            <div :span="24" style="width:99%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
                             <div  style="padding: 0 20px"  v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
                                 <div   class="list">
                                     <div class="title">
@@ -196,7 +228,7 @@
 <script>
  import {mapGetters} from 'vuex';
  import {  place_advertiser_list } from '@/api/acount';
-import { domain_list,domain_shenhe1,domain_shenhe2,upyumingstatus,page_list,page_shenhe1,page_shenhe2,upyestatus} from '@/api/request';
+import { audit_history,page_list,page_shenhe1,page_shenhe2,upyestatus} from '@/api/request';
 import search from '../../search/search';
 import {  place_to_advertise } from '@/api/acount';
 const moment = require('moment');
@@ -236,6 +268,7 @@ export default {
             yuming_text:'',
             IP_text:'',
             link_text:'',
+            audit_historyList:[],
 // 分页
             page:'20',
             num:'1',
@@ -253,6 +286,17 @@ export default {
                     this.tableData1 =  response.data;
                     this.kehuTableLength = Number(response.page_data.count)
                     this.tableshow = false;
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            audit_history(){
+                console.log(this.shenheInfor[0].id)
+                audit_history({
+                    id:this.shenheInfor[0].id,
+                    name:'demand'
+                }).then(response => {
+                    this.audit_historyList = response
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -373,6 +417,8 @@ export default {
              this.link_text = '';
              this.textarea_note = '';
             this.shenheInfor.push(val);
+            this.audit_historyList = [];
+            this.audit_history();
             this.jiexiBol = true;
         },
         shenheChange(){
