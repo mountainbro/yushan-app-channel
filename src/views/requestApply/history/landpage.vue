@@ -83,9 +83,16 @@
                         <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
-                                <span v-if="scope.row.is_ultimate_shenhe == 0">处理中...</span>
-                                <span v-if="scope.row.is_ultimate_shenhe == 1">已完成</span>
-                                <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">驳回</span>
+                                <span v-if="scope.row.is_ultimate_shenhe == 0">
+                                    <i style="width: 5px;height: 5px;background: #a4a4a4;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+                                    处理中</span>
+                                <span v-if="scope.row.is_ultimate_shenhe == 1">
+                                     <i style="width: 5px;height: 5px;background: #52c41a ;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+
+                                    已完成</span>
+                                <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">
+                                    <i style="width: 5px;height: 5px;background: #f5222d ;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+                                    驳回</span>
                             </template>
                         </el-table-column>
 
@@ -96,19 +103,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                                label="操作">
-                            <template slot-scope="scope">
-                                <span @click="look_infor(scope.row)">查看</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-
                                 prop="true_url"
                                 label="下载包">
                             <template slot-scope="scope">
-                                <a :href=scope.row.zip_link target="_blank">
+                                <a :href="'http://'+scope.row.zip_link" target="_blank">
                                     <img src="../img/dowm.png" style="width: 20px" alt="">
                                 </a>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="操作">
+                            <template slot-scope="scope">
+                                <span @click="look_infor(scope.row)">查看</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -154,7 +160,17 @@
                                     {{item.a_users}}
                                 </div>
                             </div>
-                            <div   class="list">
+                            <div   class="list" v-if="item.link ">
+                                <div  class="title">
+                                    推广链接:
+                                </div>
+                                <div class='right_title' >
+                                    <span v-for="i in JSON.parse(item.link)">
+                                        <a :href=i target="_blank">{{i}}</a><br>
+                                    </span>
+                                </div>
+                            </div>
+                            <div   class="list" v-if="role_name != '渠道'">
                                 <div class="title">
                                     解析备注:
                                 </div>
@@ -242,12 +258,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div slot="footer" style="text-align: center;margin-top: 10px" class="dialog-footer" v-if="role_name != '渠道'">
+                            <div v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
+                                <el-button size="mini"@click="jiexiBol = false">取 消</el-button>
+                                <el-button size="mini"type="primary" @click="push_shenhe" >确 定</el-button>
+                            </div>
 
+                        </div>
                     </div>
-                    <div slot="footer" style="text-align: center" class="dialog-footer" v-if="role_name != '渠道'">
-                        <el-button size="mini"@click="jiexiBol = false">取 消</el-button>
-                        <el-button size="mini"type="primary" @click="push_shenhe" >确 定</el-button>
-                    </div>
+
                 </el-dialog>
             </el-col>
 
@@ -400,6 +419,7 @@ export default {
             },
 // 添加落地页需二审求
             upyestatus(){
+                this.link_text = JSON.stringify(this.link_text.split(/\s+/))
                 upyestatus({
                     id:this.shenheInfor[0].id,
                     link:this.link_text,
@@ -470,6 +490,7 @@ export default {
              this.IP_text = '';
              this.link_text = '';
              this.textarea_note = '';
+
             this.shenheInfor.push(val);
             this.audit_historyList = [];
             this.audit_history();
@@ -502,7 +523,7 @@ export default {
         filterDate: function (val) {
             var time=new Date(parseInt(val) * 1000);
             return   moment(time).format('YYYY-MM-DD HH:mm:ss')
-        }
+        },
     },
     props: ['infoedata_ladnpage']
 }

@@ -82,9 +82,16 @@
                         <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
-                                <span v-if="scope.row.is_ultimate_shenhe == 0 && scope.row.audit != 2">处理中...</span>
-                                <span v-if="scope.row.is_ultimate_shenhe == 1">已完成</span>
-                                <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">驳回</span>
+                                <span v-if="scope.row.is_ultimate_shenhe == 0">
+                                    <i style="width: 5px;height: 5px;background: #a4a4a4;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+                                    处理中</span>
+                                <span v-if="scope.row.is_ultimate_shenhe == 1">
+                                     <i style="width: 5px;height: 5px;background: #52c41a ;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+
+                                    已完成</span>
+                                <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">
+                                    <i style="width: 5px;height: 5px;background: #f5222d ;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+                                    驳回</span>
                             </template>
                         </el-table-column>
 
@@ -144,7 +151,7 @@
                                     {{item.a_users}}
                               </div>
                             </div>
-                            <div   class="list">
+                            <div   class="list" v-if="role_name != '渠道'">
                                 <div class="title">
                                     解析备注:
                                 </div>
@@ -236,12 +243,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div slot="footer" style="text-align: center;margin-top: 10px" class="dialog-footer" v-if="role_name != '渠道'">
+                            <div v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
+                                <el-button size="mini"@click="jiexiBol = false">取 消</el-button>
+                                <el-button size="mini"type="primary" @click="push_shenhe" >确 定</el-button>
+                            </div>
 
+                        </div>
                     </div>
-                    <div slot="footer" style="text-align: center" class="dialog-footer" v-if="role_name != '渠道'">
-                        <el-button size="mini"@click="jiexiBol = false">取 消</el-button>
-                        <el-button size="mini"type="primary" @click="push_shenhe" >确 定</el-button>
-                    </div>
+
                 </el-dialog>
             </el-col>
 

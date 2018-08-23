@@ -40,7 +40,8 @@
     },
      watch:{
          history_tab(val){
-             this.infordata = this.chooseData;
+             this.num++
+             this.infordata = this.chooseData +this.num
          },
      },
     methods:{

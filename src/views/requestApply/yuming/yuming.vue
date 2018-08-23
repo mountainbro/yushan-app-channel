@@ -110,6 +110,7 @@ export default {
                     note:this.urlrequest,
                     submitusers:this.user.id
                 }).then(response => {
+                    this.$message.success('需求添加成功');
                     this.tuiguang={
                         value:'',
                         value1:'',
@@ -119,8 +120,9 @@ export default {
                     },
                     this.bol = false;
                     this.urlrequest = [''];
-                    this.$message.success('需求添加成功');
                    this.zhanghuoptions=response.data.data;
+
+                    this.$emit('add_url');
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -169,6 +171,7 @@ export default {
         /* 二级域名解析 */
         gojiexi(){
             if(this.tuiguang.value1&&this.tuiguang.value&&this.urlrequest[0]){
+                this.$message('正在提交，请稍后');
                 this.add_jiexi_url();
             }else{
                  this.$message.error('信息没有添加完成');

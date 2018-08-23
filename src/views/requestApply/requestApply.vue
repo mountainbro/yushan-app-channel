@@ -2,10 +2,10 @@
     <el-row class="requestapply" >
         <el-tabs type="card"  v-model="activeName" @tab-click="handleClick()">
             <el-tab-pane label="二级域名解析" class="tab_top" name="second">
-                <yuming :yuming_tab="infordata_yuming" ></yuming>
+                <yuming :yuming_tab="infordata_yuming" @add_url="add_url"></yuming>
             </el-tab-pane>
             <el-tab-pane  label="上线推广页面" class="tab_top" name="first">
-                <landpage :landpage_tab="infordata_landpage" ></landpage>
+                <landpage :landpage_tab="infordata_landpage" @add_landpage="add_landpage"></landpage>
             </el-tab-pane>
             <el-tab-pane label="历史申请" class="tab_top" name="third">
                <history :history_tab="infordata_his" ></history>
@@ -40,6 +40,14 @@ export default {
         this.infordata_landpage = this.activeName
     },
     methods:{
+        add_url(){
+          this.activeName = 'third';
+            this.infordata_his = this.activeName+ this.num
+        },
+        add_landpage(){
+            this.activeName = 'third';
+            this.infordata_his = this.activeName+ this.num
+        },
         //tab切换事件
         handleClick(){
             this.num++
@@ -63,10 +71,12 @@ export default {
 <style rel="stylesheet/scss"  lang="scss">
     @import "@/styles/table.scss";
     .requestapply {
+
         width:100%;
         height:800px;
         background: white;
-        padding: 10px;
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+        padding:20px;
        .main{
            .lis{
                padding: 12px 0  ;
