@@ -2,10 +2,10 @@
  <el-row class="menu">
          <el-row :gutter="20" class="urljiexi" >
              <el-col :span="10" style="min-width:370px;">
-                 <div class="main">
+                 <div class="main" style="height:550px; overflow:auto;">
 
                      <div class="lis" >
-                         <span>选择客户：</span>
+                         <span class="lis_span">选择客户：</span>
                          <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择" @change="kehuchange">
                              <el-option
                                      v-for="item in companyoptions"
@@ -16,7 +16,7 @@
                          </el-select>
                      </div>
                      <div class="lis" >
-                         <span>选择账户：</span>
+                         <span class="lis_span">选择账户：</span>
                          <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择">
                              <el-option
                                      v-for="item in zhanghuoptions"
@@ -26,36 +26,46 @@
                              </el-option>
                          </el-select>
                      </div>
+                     <div class="lis" >
+                         <span class="lis_span">解析需求备注</span>
+                         
+                     </div>
+                     <div v-for="(item,index) in urlrequest" :key="index" style="padding: 6px 0;" >
+
+                        <span class="lis_span" 
+                            style="font-size: 14px;
+                            display: inline-block;
+                            width: 90px;"> 
+                            解析 {{index+1}}：
+                     </span>
+                        <el-input  size="mini" v-model="urlrequest[index]"
+                                    type="textarea"
+                                    style="width:290px;vertical-align:middle;"
+                                    :autosize="{ minRows: 3, maxRows: 6}"
+                                    :placeholder="defaultContent">
+                        </el-input>
+                    </div>
+                    <div class="addurl" style="" @click="addurlEvent">
+                        <i  style="
+                                
+                                font-size: 14px;
+                                margin: 5px auto;
+                                vertical-align:middle;"
+                            class="el-icon-circle-plus-outline">
+                        </i>
+                        <span style="font-size: 12px;">添加</span>
+                    </div>
 
                  </div>
+                 <div style="text-align:center;">
+                    <el-button size="mini" :disabled="bol" :loading="bol"type="primary" @click="gojiexi()">确 定</el-button>
+                    <el-button size="mini" @click="clear">清空内容</el-button>
+                </div>
              </el-col>
-             <el-col :span="14" style="min-width:470px;">
-                 <div v-for="(item,index) in urlrequest" :key="index" style="padding: 6px 0;" >
 
-                     <span style="vertical-align:center;">{{index+1}} 解析需求备注：</span>
-                     <el-input  size="mini" v-model="tuiguang.coment"
-                                type="textarea"
-                                style="margin-left:1em;width:350px;vertical-align:middle;"
-                                :autosize="{ minRows: 2, maxRows: 4}"
-                                :placeholder="defaultContent">
-                     </el-input>
-                 </div>
-                 <div class="addurl" style="" @click="addurlEvent">
-                     <i  style="color: red;
-                            font-size: 50px;
-                            margin: 5px auto;
-                            vertical-align:middle;"
-                         class="el-icon-circle-plus">
-                     </i>
-                     <span>添加解析数量</span>
-                 </div>
-             </el-col>
 
          </el-row>
-         <div style="text-align:center;">
-             <el-button size="mini" type="primary" @click="gojiexi()">确 定</el-button>
-             <el-button size="mini" @click="clear">清空内容</el-button>
-         </div>
+         
  </el-row>
 </template>
 <script>
@@ -74,6 +84,7 @@ export default {
             companyoptions:[],
             zhanghuoptions:[],
             urlrequest:[''],
+            bol:false,
             defaultContent:'解析格式：\n产品名；前缀；主域；投放方式；客户ip地址',
             place_advertiser_list(){
                 place_advertiser_list({
@@ -88,26 +99,28 @@ export default {
                 place_to_advertise({
                     av_id:this.tuiguang.value
                 }).then(response => {
-                    console.log(response.data)
+
                    this.zhanghuoptions=response.data.data;
                 }).catch(err => {
                     this.$message.error(err);
                 });
             },
             add_jiexi_url(){
+                this.bol = true;
                 add_jiexi_url({
                     account_id:this.tuiguang.value1,
-                    note:this.tuiguang.coment,
+                    note:this.urlrequest,
                     submitusers:this.user.id
                 }).then(response => {
-                    console.log(response.data)
                     this.tuiguang={
-                                    value:'',
-                                    value1:'',
-                                    usrName:'',
-                                    domain:'',
-                                    coment:'',
-                                },
+                        value:'',
+                        value1:'',
+                        usrName:'',
+                        domain:'',
+                        coment:'',
+                    },
+                    this.bol = false;
+                    this.urlrequest = [''];
                     this.$message.success('需求添加成功');
                    this.zhanghuoptions=response.data.data;
                 }).catch(err => {
@@ -133,6 +146,7 @@ export default {
         //客户change
         kehuchange(){
             this.place_to_advertise()
+            this.tuiguang.value1 = '';
         },
         //清空需求内容
         clear(){
@@ -143,6 +157,7 @@ export default {
                 domain:'',
                 coment:'',
             }
+            this.urlrequest = [''];
         },
         //添加url解析
         addurlEvent(){
@@ -150,7 +165,7 @@ export default {
         },
         /* 二级域名解析 */
         gojiexi(){
-            if(this.tuiguang.value1&&this.tuiguang.value&&this.tuiguang.coment){
+            if(this.tuiguang.value1&&this.tuiguang.value&&this.urlrequest[0]){
                 this.add_jiexi_url();
             }else{
                  this.$message.error('信息没有添加完成');
@@ -171,7 +186,7 @@ export default {
        .main{
            .lis{
                padding: 12px 0  ;
-               span{
+               .lis_span{
                    display: inline-block;
                    width: 90px;
                    font-size: 14px;

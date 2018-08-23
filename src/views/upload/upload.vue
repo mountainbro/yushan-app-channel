@@ -1,6 +1,6 @@
 
 <template>
-    <el-row >
+    <el-row style="display:inline-bloack;">
         <el-upload
                     ref="upload"
                     action='http://upload-z0.qiniu.com'
@@ -12,6 +12,7 @@
                    :data='form'>
             <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
+        <span style="color: rgb(173, 170, 168);font-size:12px;">仅支持扩展名未.zip的文件</span>
         <!--<b>选择文件</b>：{{ fileName }}<br/>-->
         <!--<b>上传进度</b>：{{ loaded }} MB / {{ fileSize }} MB, {{ percent }}%<br/>-->
         <!--<b>上传结果</b>：{{ result }}<br/>-->

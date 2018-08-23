@@ -58,7 +58,7 @@ export default {
                padding: 12px 0  ;
                span{
                    display: inline-block;
-                   width: 90px;
+                //    width: 90px;
                    font-size: 14px;
                }
                .el-input,.el-textarea{
