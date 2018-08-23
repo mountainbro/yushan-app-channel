@@ -38,14 +38,6 @@
                     </el-select>
                 </el-col>
 
-
-                <!--日期开始时间：start_date-->
-                <!--日期结束时间：end_date-->
-                <!--按公司筛选: av_id-->
-                <!--按审核状态筛选：shenhe 1:已审核 2:已驳回 0：未审核-->
-
-
-                <!-- 表格数据展示 -->
                 <el-col :span="24">
                     <el-table
                             v-loading="tableshow"
@@ -83,7 +75,7 @@
                         <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
-                                <span v-if="scope.row.is_ultimate_shenhe == 0">
+                                <span v-if="scope.row.is_ultimate_shenhe == 0 && scope.row.audit != 2 ">
                                     <i style="width: 5px;height: 5px;background: #a4a4a4;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
                                     处理中</span>
                                 <span v-if="scope.row.is_ultimate_shenhe == 1">
@@ -160,6 +152,7 @@
                                     {{item.a_users}}
                                 </div>
                             </div>
+
                             <div   class="list" v-if="item.link ">
                                 <div  class="title">
                                     推广链接:
@@ -170,7 +163,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div   class="list" v-if="role_name != '渠道'">
+                            <div   class="list">
                                 <div class="title">
                                     解析备注:
                                 </div>

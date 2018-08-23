@@ -8,6 +8,7 @@
                    :on-success="handleSuccess"
                    :on-error="handleError"
                    :before-upload="beforeUpload"
+                    :limit="1"
                    :auto-upload="false"
                    :data='form'>
             <el-button size="small" style="padding: 8px 20px" type="primary">点击上传</el-button>
@@ -25,7 +26,7 @@
 // 上传
                 form: {
                     token: '',
-                    key: null
+                    key: ''
                 },
                 fileName: '',
                 fileSize: '',
@@ -50,7 +51,7 @@
 // 上传
             beforeUpload (file) {
                 this.fileName = file.name;
-                this.form.key = file.name
+                this.form.key = (new Date()).getTime() + file.name ;
             },
  //文件上传时 的钩子
             handleProgress (event) {
