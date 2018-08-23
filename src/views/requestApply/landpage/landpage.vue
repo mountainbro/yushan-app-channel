@@ -18,7 +18,7 @@
                     </div>
                     <div class="lis" >
                         <span>选择账户：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择" @change="zhanghuchange">
+                        <el-select style="width:300px;" :disabled="zhanghubol" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择" @change="zhanghuchange">
                             <el-option
                                     v-for="item in zhanghuoptions"
                                     :key="item.id"
@@ -29,7 +29,7 @@
                     </div>
                     <div class="lis" >
                         <span>二级域名：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择" @change="domainchange()">
+                        <el-select style="width:300px;" :disabled="urlbol" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择" @change="domainchange()">
                             <el-option
                                     v-for="item in urloptions"
                                     :key="item.id"
@@ -102,6 +102,8 @@ export default {
             zhanghuoptions:[],
             urloptions:[],
             urlrequest:[''],
+            zhanghubol:true,
+            urlbol:true,
             defaultContent:'解析格式：\n产品名；前缀；主域；投放方式；客户ip地址',
             place_advertiser_list(){
                 place_advertiser_list({
@@ -174,12 +176,14 @@ export default {
             this.tuiguang.value1 = '';
             this.tuiguang.value2 = '';
             this.place_to_advertise()
+            this.zhanghubol = false;
             
         },
         //账户change
         zhanghuchange(){
             this.tuiguang.value2 = '';
             this.place_account_domain();
+            this.urlbol = false;
         },
         //账户change
         domainchange(){
@@ -207,6 +211,8 @@ export default {
                 domain:'',
                 coment:'',
             }
+            this.zhanghubol = true;
+            this.urlbol = true;
         },
         //上线推广
         goTuiGuang(){

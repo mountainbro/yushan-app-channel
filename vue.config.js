@@ -7,7 +7,7 @@ module.exports = {
     // 默认情况下，Vue CLI假设您的应用程序将部署在域的根目录下。
     // https://www.my-app.com/。如果应用程序部署在子路径上，则需要使用此选项指定子路径。例如，如果您的应用程序部署在https://www.foobar.com/my-app/，集baseUrl到'/my-app/'.
 
-    baseUrl: '/',
+    baseUrl: './',
 
     // outputDir: 在npm run build时 生成文件的目录 type:string, default:'dist'
 
@@ -49,7 +49,8 @@ module.exports = {
         port: 8085,
         https: false,
         hotOnly: false,
-        proxy: 'http://192.168.1.110:8083', // 设置代理
+        proxy:'http://192.168.1.110:8083',
+        // proxy: 'http://c.lzad.cc/', // 设置代理
         before: app => {}
     }
 }
