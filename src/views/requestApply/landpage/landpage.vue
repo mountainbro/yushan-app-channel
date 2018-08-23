@@ -126,7 +126,6 @@ export default {
                     id:this.tuiguang.value1
                 }).then(response => {
                    this.urloptions=response.data;
-                   console.log(this.urloptions[0].iframeurl)
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -138,7 +137,7 @@ export default {
                     zip_link:this.tuiguang.key,
                     submitusers:this.user.id,
                     note:this.tuiguang.coment,
-                }).then(response => {
+                }).then(() => {
                     this.tuiguang ={
                             value:'',
                             value1:'',
@@ -149,6 +148,7 @@ export default {
                             key:'',
                         }
                         this.$message.success('添加需求成功');
+                    this.$emit('add_landpage');
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -163,7 +163,7 @@ export default {
 
     },
     watch:{
-        landpage_tab(val){
+        landpage_tab(){
             this.place_advertiser_list();
         },
     },
@@ -210,19 +210,19 @@ export default {
         },
         //上线推广
         goTuiGuang(){
-            this.$refs.child.submitUpload();
+
             let _this =this;
-            setTimeout(()=>{
-                if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2&&_this.tuiguang.key){
-                _this.create_page_task()
+            if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2){
+                this.$refs.child.submitUpload();
             }else{
                 _this.$message.error('信息没有添加完成');
             }
-        
-            },1000)
         },
         successupload(val){
+            this.$message('正在提交，请稍后');
             this.tuiguang.key = val.key;
+            this.create_page_task()
+
         },
         //添加url解析
         addurlEvent(){

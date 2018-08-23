@@ -5,7 +5,7 @@
             <el-col :span="24" >
 
                 <el-col :span="24" class="search_title">
-                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 10px"></input>
+                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 10px">
                     <el-date-picker
                             v-model="hisdate"
                             type="daterange"
@@ -83,9 +83,16 @@
                         <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
-                                <span v-if="scope.row.is_ultimate_shenhe == 0">处理中...</span>
-                                <span v-if="scope.row.is_ultimate_shenhe == 1">已完成</span>
-                                <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">驳回</span>
+                                <span v-if="scope.row.is_ultimate_shenhe == 0">
+                                    <i style="width: 5px;height: 5px;background: #a4a4a4;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+                                    处理中</span>
+                                <span v-if="scope.row.is_ultimate_shenhe == 1">
+                                     <i style="width: 5px;height: 5px;background: #52c41a ;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+
+                                    已完成</span>
+                                <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">
+                                    <i style="width: 5px;height: 5px;background: #f5222d ;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+                                    驳回</span>
                             </template>
                         </el-table-column>
 
@@ -96,19 +103,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                                label="操作">
-                            <template slot-scope="scope">
-                                <span @click="look_infor(scope.row)">查看</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-
                                 prop="true_url"
                                 label="下载包">
                             <template slot-scope="scope">
-                                <a :href=scope.row.zip_link target="_blank">
+                                <a :href="'http://'+scope.row.zip_link" target="_blank">
                                     <img src="../img/dowm.png" style="width: 20px" alt="">
                                 </a>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="操作">
+                            <template slot-scope="scope">
+                                <span @click="look_infor(scope.row)">查看</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -128,7 +134,7 @@
                 </el-col>
                 <!-- 新增需求 -->
                 <el-dialog title="需求详情" class="his_tan" :visible.sync="jiexiBol"  :close-on-click-modal="false" @close="jiexiBol = false"  >
-                    <div v-for="item in shenheInfor">
+                    <div v-for="(item,index) in shenheInfor" :key="index">
                         <div :span="24" style="padding: 10px 20px">
                             <div   class="list">
                                 <div class="title">
@@ -154,7 +160,17 @@
                                     {{item.a_users}}
                                 </div>
                             </div>
-                            <div   class="list">
+                            <div   class="list" v-if="item.link ">
+                                <div  class="title">
+                                    推广链接:
+                                </div>
+                                <div class='right_title' >
+                                    <span v-for="(i,index) in JSON.parse(item.link)" :key="index">
+                                        <a :href=i target="_blank">{{i}}</a><br>
+                                    </span>
+                                </div>
+                            </div>
+                            <div   class="list" v-if="role_name != '渠道'">
                                 <div class="title">
                                     解析备注:
                                 </div>
@@ -169,7 +185,7 @@
                                     审核备注:
                                 </div>
                                 <div class='right_title'>
-                                    <div  class="shenhe_note"   v-for="data in audit_historyList">
+                                    <div  class="shenhe_note" :key="index"  v-for="(data,index) in audit_historyList">
                                         <div class="top_icon"></div>
 
                                         <div class="box">
@@ -242,12 +258,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div slot="footer" style="text-align: center;margin-top: 10px" class="dialog-footer" v-if="role_name != '渠道'">
+                            <div v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
+                                <el-button size="mini" @click="jiexiBol = false">取 消</el-button>
+                                <el-button size="mini" type="primary" @click="push_shenhe" >确 定</el-button>
+                            </div>
 
+                        </div>
                     </div>
-                    <div slot="footer" style="text-align: center" class="dialog-footer" v-if="role_name != '渠道'">
-                        <el-button size="mini"@click="jiexiBol = false">取 消</el-button>
-                        <el-button size="mini"type="primary" @click="push_shenhe" >确 定</el-button>
-                    </div>
+
                 </el-dialog>
             </el-col>
 
@@ -258,7 +277,6 @@
  import {  place_advertiser_list } from '@/api/acount';
 import { audit_history,page_list,page_shenhe1,page_shenhe2,upyestatus} from '@/api/request';
 import search from '../../search/search';
-import {  place_to_advertise } from '@/api/acount';
 const moment = require('moment');
 import state from '../sh_state';
 export default {
@@ -342,7 +360,6 @@ export default {
                 });
             },
             audit_history(){
-                console.log(this.shenheInfor[0].id)
                 audit_history({
                     id:this.shenheInfor[0].id,
                     name:'demand'
@@ -400,10 +417,11 @@ export default {
             },
 // 添加落地页需二审求
             upyestatus(){
+                this.link_text = JSON.stringify(this.link_text.split(/\s+/))
                 upyestatus({
                     id:this.shenheInfor[0].id,
                     link:this.link_text,
-                }).then(response => {
+                }).then(() => {
                     this.jiexiBol = false;
                     this.page_list();
                 }).catch(err => {
@@ -428,7 +446,7 @@ export default {
         ])
     },
     watch:{
-        infoedata_ladnpage(val){
+        infoedata_ladnpage(){
             this.page_list();
             this.place_advertiser_list();
             this.role_name = Object.keys( this.roleName);
@@ -443,7 +461,7 @@ export default {
             this.page_list();
         },
 //历史搜索-下拉
-        acountAcount(val){
+        acountAcount(){
             this.tableshow = true;
             this.av_id = this.acountselect;
             this.page_list();
@@ -470,6 +488,7 @@ export default {
              this.IP_text = '';
              this.link_text = '';
              this.textarea_note = '';
+
             this.shenheInfor.push(val);
             this.audit_historyList = [];
             this.audit_history();
@@ -502,7 +521,7 @@ export default {
         filterDate: function (val) {
             var time=new Date(parseInt(val) * 1000);
             return   moment(time).format('YYYY-MM-DD HH:mm:ss')
-        }
+        },
     },
     props: ['infoedata_ladnpage']
 }

@@ -3,9 +3,8 @@
     <el-row >
 
         <el-col :span="24" class="search_title">
-            <span class="name">搜索:</span>
-            <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 20px"></input>
-            <span class="name">按客户查看:</span>
+            <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 20px">
+            <span class="name">客户:</span>
             <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
                 <el-option
                         v-for="item in options"
@@ -19,7 +18,6 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex';
     import {  place_advertiser_list } from '@/api/acount';
     export default {
         data() {

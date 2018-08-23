@@ -4,23 +4,20 @@
         <el-upload
                     ref="upload"
                     action='http://upload-z0.qiniu.com'
-
+                    :on-progress="handleProgress"
                    :on-success="handleSuccess"
                    :on-error="handleError"
                    :before-upload="beforeUpload"
                    :auto-upload="false"
                    :data='form'>
-            <el-button size="small" type="primary">点击上传</el-button>
+            <el-button size="small" style="padding: 8px 20px" type="primary">点击上传</el-button>
         </el-upload>
         <span style="color: rgb(173, 170, 168);font-size:12px;">仅支持扩展名未.zip的文件</span>
-        <!--<b>选择文件</b>：{{ fileName }}<br/>-->
-        <!--<b>上传进度</b>：{{ loaded }} MB / {{ fileSize }} MB, {{ percent }}%<br/>-->
-        <!--<b>上传结果</b>：{{ result }}<br/>-->
+        <b>上传进度</b>：{{ loaded }} MB / {{ fileSize }} MB, {{ percent }}%<br/>
     </el-row>
 </template>
 
 <script>
-    import { mapActions } from 'vuex';
     import {  getuptoken } from '@/api/acount';
     export default {
         data() {
@@ -30,10 +27,11 @@
                     token: '',
                     key: null
                 },
-//                fileName: '',
-//                fileSize: '',
-//                loaded: '',
-//                percent: '',
+                fileName: '',
+                fileSize: '',
+                loaded: '',
+                percent: '',
+                result:'未上传',
 // 获取token
                 getuptoken(){
                     getuptoken().then(response => {
@@ -54,13 +52,16 @@
                 this.fileName = file.name;
                 this.form.key = file.name
             },
- //文件上传时 的钩子   :on-progress="handleProgress"
-//            handleProgress (event) {
-//                this.loaded = (event.loaded / 1000000).toFixed(2);
-//                this.fileSize = (event.total / 1000000).toFixed(2);
-//                this.percent = (event.loaded / event.total * 100).toFixed(2)
-//            },
+ //文件上传时 的钩子
+            handleProgress (event) {
+                this.loaded = (event.loaded / 1000000).toFixed(2);
+                this.fileSize = (event.total / 1000000).toFixed(2);
+                this.percent = (event.loaded / event.total * 100).toFixed(2)
+            },
             submitUpload() {
+                if(this.$refs.upload.uploadFiles.length  == 0){
+                    this.$message('请先上传文件夹');
+                }
                 this.$refs.upload.submit();
             },
             handleSuccess (val) {
@@ -69,10 +70,11 @@
                     type: 'success'
                 });
                  this.$emit('successupload',val);
-//                this.result = '上传成功'
+                this.$refs.upload.clearFiles();
+                this.result = '上传成功'
             },
             handleError (error) {
-//                this.result = error.toString()
+                this.result = error.toString()
                 this.$message.error('文件上传失败');
             },
         },
