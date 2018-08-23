@@ -185,22 +185,6 @@ export default {
             this.place_account_domain();
             this.urlbol = false;
         },
-        //账户change
-        domainchange(){
-
-        },
-        //tab切换事件
-        handleClick(){
-
-        },
-        //上传压缩包
-        upsuccess(){
-
-        },
-        //上传change触发事件
-        handleChange(){
-
-        },
         //清空需求内容
         clear(){
             this.tuiguang ={
