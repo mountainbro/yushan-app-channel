@@ -11,9 +11,6 @@ import acount from '../views/acount/acount';
 import requestApply from '../views/requestApply/requestApply';
 
 
-import demo1_1 from '../views/demo/demo1_1';
-import demo1 from '../views/demo/demo1';
-import demo3 from '../views/demo/demo3';
 
 Vue.use(Router);
 
@@ -42,25 +39,19 @@ export const constantRouterMap = [
                 component: acount,
                 name: '/acount',
             },
-            {
-                path: 'demo01',
-                component: demo1_1,
-                meta: {title: 'demo'},
-                name: 'demo01',
-            },
         ]
     },
-    {
-        path: '/demo1',
-        component: Layout,
-        redirect: '/demo1/index',
-        meta: {title: '提交需求2',role:[roleType.customer_list]},
-        name: '提交需求2',
-        noDropdown: true,
-        children: [
-            {path: 'index', component: demo1, name: 'demo2'},
-        ]
-    },
+    // {
+    //     path: '/demo1',
+    //     component: Layout,
+    //     redirect: '/demo1/index',
+    //     meta: {title: '提交需求2',role:[roleType.customer_list]},
+    //     name: '提交需求2',
+    //     noDropdown: true,
+    //     children: [
+    //         {path: 'index', component: demo1, name: 'demo2'},
+    //     ]
+    // },
     {
         path: '/demo2',
         component: Layout,
@@ -72,17 +63,7 @@ export const constantRouterMap = [
             {path: 'requestApply', component: requestApply, name: 'requestApply'},
         ]
     },
-    {
-        path: '/demo3',
-        component: Layout,
-        redirect: '/demo3/index',
-        name: '提交需求4',
-        meta: {title: '提交需求4'},
-        noDropdown: true,
-        children: [
-            {path: 'index', component: demo3, name: 'demo4'},
-        ]
-    },
+
 ]
 store.state.permission.routers = constantRouterMap;
 export default new Router({

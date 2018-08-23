@@ -14,7 +14,7 @@ const user = {
     mutations: {
         SET_TOKEN: (state, roles) => {
         Cookies.set('CRM-Token', roles);
-state.token = roles;
+        state.token = roles;
 },
 SET_USER: (state, user) => {
     localStorage.setItem('CRM-User', JSON.stringify(user));
@@ -24,9 +24,10 @@ SET_ROLES: (state, roles) => {
     localStorage.setItem('SET_ROLES', JSON.stringify(roles));
     state.roles = roles;
 },
-SET_ROLENAME:(state, rolesname) => {
-    localStorage.setItem('SET_ROLENAME', JSON.stringify(rolesname));
-    state.roles = rolesname;
+SET_ROLENAME:(state, roleName) => {
+    localStorage.setItem('SET_ROLENAME', JSON.stringify(roleName));
+    state.roleName = roleName;
+
 },
 },
 
@@ -41,6 +42,7 @@ actions: {
             commit('SET_TOKEN', userInfoData.auth_key);
             const roles = response.auth;
             const rolesname = response.roles;
+
             commit('SET_ROLES',roles);
             commit('SET_ROLENAME',rolesname);
 

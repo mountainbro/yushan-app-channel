@@ -2,6 +2,7 @@
     <el-row class="header">
         <el-col :span="24">
             <el-col :span="18" class="left_header">
+                <span class="header_title">工作台</span>
                 <el-menu :default-active="activeIndex"  mode="horizontal" >
                     <template v-for="(item,index) in permissionRoutes" v-if="!item.hidden">
                         <el-menu-item :index="item.path" :key="index"  v-if="item.children.length<=1">
@@ -48,7 +49,7 @@
                 <!--</el-dropdown>-->
                 <el-dropdown trigger="click">
                       <span class="el-dropdown-link">
-                        赵鹏
+                        {{user.name}}
                         <i class="el-icon-caret-bottom"/>
                       </span>
                     <el-dropdown-menu slot="dropdown">
@@ -86,6 +87,7 @@
       computed: {
           ...mapGetters([
               'LogOut',
+                'user',
                 'permission_routers'
           ])
       },
@@ -108,20 +110,33 @@
     .header {
         width:100%;
         height:50px;
-        border: 1px solid red;
         background: white;
         z-index: 99;
         .left_header {
             height:50px;
+            padding-left: 20px;
+            .header_title {
+                display: inline-block;
+                height:50px;
+                line-height: 50px;
+                vertical-align: top;
+                font-size: 24px;
+                font-weight: bold;
+                color: #7e7e7e;
+                margin-right: 80px;
+            }
             ul{
+                display: inline-block;
+                vertical-align: top;
                 li {
-                    padding: 0 15px;
                     height:50px;
                     line-height: 50px;
+                    padding: 0;
                     .router_class {
                         display: block;
                         width:100%;
                         height:100%;
+                        padding: 0 20px;
                     }
                     .el-submenu__title {
                         height:50px;
@@ -135,6 +150,7 @@
             height: 50px;
             line-height: 50px;
             text-align: right;
+            padding-right: 20px;
         }
     }
     .header_tan {
