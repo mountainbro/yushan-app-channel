@@ -1,5 +1,4 @@
 <template>
-    <el-row class="requestapply" >
         <div class="hio">
 
             <!-- 搜索框 -->
@@ -24,7 +23,7 @@
                             v-loading="tableshow"
                             :data="tableData1"
                             class="vue-table"
-                            height="730"
+                            height="550"
                             border >
                         <el-table-column
                                 prop="sub_date"
@@ -193,7 +192,6 @@
             </el-col>
 
         </div>
-    </el-row>
 </template>
 <script>
  import {mapGetters} from 'vuex';
@@ -226,7 +224,7 @@ export default {
             },
 
             tableData1:[],
-            tableshow:false,
+            tableshow:true,
             search1:'',
             chooseData:'urlData',
             av_id:'',

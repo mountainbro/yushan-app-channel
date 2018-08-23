@@ -2,8 +2,7 @@
  <el-row class="menu">
          <el-row :gutter="20" class="urljiexi" >
              <el-col :span="10" style="min-width:370px;">
-                 <div class="main" style="height:550px; overflow:auto;">
-
+                 <div class="main">
                      <div class="lis" >
                          <span class="lis_span">选择客户：</span>
                          <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择" @change="kehuchange">
@@ -58,14 +57,13 @@
 
                  </div>
                  <div style="text-align:center;">
-                    <el-button size="mini" :disabled="bol" :loading="bol"type="primary" @click="gojiexi()">确 定</el-button>
+                    <el-button size="mini" :disabled="bol" :loading="bol" type="primary" @click="gojiexi()">确 定</el-button>
                     <el-button size="mini" @click="clear">清空内容</el-button>
                 </div>
              </el-col>
 
 
          </el-row>
-         
  </el-row>
 </template>
 <script>
@@ -138,8 +136,13 @@ export default {
 //            upload,
     },
     mounted(){
-        this.place_advertiser_list();
+
         
+    },
+    watch:{
+        yuming_tab(val){
+            this.place_advertiser_list();
+        },
     },
     methods:{
 
@@ -177,7 +180,9 @@ export default {
         ...mapGetters([
             'user',
         ])
-    }
+    },
+//
+    props: ['yuming_tab']
 }
 </script>
 <style lang="scss" >
@@ -196,53 +201,12 @@ export default {
                    display: inline-block;
                    width:290px!important;
                }
-               
                .el-select__caret{
                    line-height: 28px!important;
                }
-               
-
-               
            }
            
        }
-       .phone{
-           position: relative;
-            width: 33vw;
-            height: 59vh;
-            background:  url(http://test.myushan.com/821phone.png) no-repeat ;
-            background-size: 100% 100%;
-            .logo{
-                position: absolute;
-                width: 10%;
-                top: 7vh;
-                left: 6vw;
-            }
-            .banquan{
-                position: absolute;
-                left: 0;
-                right: 0;
-                font-size: 12px;
-                /* text-align: center; */
-                bottom: 18vh;
-                transform: scale(0.7);
-                -webkit-transform: scale(0.7);
-                margin-left: 3vw;
-            }
-            .rules{
-                padding-left:6vw;
-                padding-top: 9vh;
-                font-size: 14px;
-            }
-        }
-        .titles{
-            font-weight: 600;
-            color: black;
-        }
-        .redinfo{
-            font-size: 12px;
-            color: #F56C6C;
-        }
         .urljiexi{
             .addurl{
                 text-align:left;

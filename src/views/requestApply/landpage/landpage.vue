@@ -1,5 +1,5 @@
 <template>
-    <el-row class="requestapply" >
+    <el-row class="landpageBox">
         <el-row :gutter="20">
             <el-col :span="10">
                 <div class="main">
@@ -66,14 +66,12 @@
                         <p>2.严禁全屏下载</p>
                         <p>3.只有按钮点击下载</p>
                         <p>4.logo，版权清晰可见</p>
-
                     </div>
                     <div class="banquan">北京智鸟科技有限公司版权所有</div>
                 </div>
             </el-col>
-
         </el-row>
-        <div style="text-align:center;position:fixed;left:0;right:0;">
+        <div style="text-align:center;">
             <el-button size="mini" type="primary" @click="goTuiGuang()">确 定</el-button>
             <el-button size="mini" @click="clear">清空内容</el-button>
         </div>
@@ -82,7 +80,7 @@
 <script>
 import {mapGetters} from 'vuex';
 import {  place_advertiser_list,place_to_advertise,place_account_domain,create_page_task } from '@/api/acount';
-       import upload from '../..//upload/upload';
+       import upload from '../../upload/upload';
 export default {
     data() {
         return{
@@ -158,10 +156,10 @@ export default {
            upload,
 
     },
-    mounted(){
-        this.place_advertiser_list();
-        
-
+    watch:{
+        landpage_tab(val){
+            this.place_advertiser_list();
+        },
     },
     methods:{
    
@@ -228,46 +226,51 @@ export default {
         searchinfo1(){
 
         },
-
-
-
-        
     },
     computed:{
         ...mapGetters([
             'user',
         ])
-    }
+    },
+    props: ['landpage_tab']
 }
 </script>
 <style lang="scss" scoped>
     @import "@/styles/table.scss";
-    .requestapply {
-       .main{
-           .lis{
-               padding: 12px 0  ;
-               span{
-                   display: inline-block;
-                //    width: 90px;
-                   font-size: 14px;
-               }
-               .el-input,.el-textarea{
-                   vertical-align: top!important;
-                   display: inline-block;
-                   width:290px!important;
-               }
-               
-               .el-select__caret{
-                   line-height: 28px!important;
-               }
-               
+    .landpageBox {
+        .titles{
+            font-weight: 600;
+            color: black;
+        }
+        .redinfo{
+            font-size: 12px;
+            color: #F56C6C;
+        }
+        .main{
+            .lis{
+                padding: 12px 0  ;
+                span{
+                    display: inline-block;
+                    //    width: 90px;
+                    font-size: 14px;
+                }
+                .el-input,.el-textarea{
+                    vertical-align: top!important;
+                    display: inline-block;
+                    width:290px!important;
+                }
 
-               
-           }
-           
-       }
-       .phone{
-           position: relative;
+                .el-select__caret{
+                    line-height: 28px!important;
+                }
+
+
+
+            }
+
+        }
+        .phone{
+            position: relative;
             width: 33vw;
             height: 59vh;
             background:  url(http://test.myushan.com/821phone.png) no-repeat ;
@@ -296,20 +299,6 @@ export default {
                 font-size: 12px;
                 line-height: 19px;
                 letter-spacing: 1px;
-            }
-        }
-        .titles{
-            font-weight: 600;
-            color: black;
-        }
-        .redinfo{
-            font-size: 12px;
-            color: #F56C6C;
-        }
-        .urljiexi{
-            .addurl{
-                text-align:left;
-                cursor: pointer;
             }
         }
     }

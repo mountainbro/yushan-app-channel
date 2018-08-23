@@ -10,7 +10,6 @@
                                 {{item.meta.title}}
                             </router-link>
                         </el-menu-item>
-
                         <el-submenu :index="item.path"   v-if="item.children.length>1" :key="index">
                             <template slot="title" >
                                 {{item.meta.title}}
@@ -28,7 +27,6 @@
                             </router-link>
                         </el-submenu>
                     </template>
-
                 </el-menu>
             </el-col>
             <el-col :span="6" class="right_header">
@@ -53,16 +51,6 @@
                         <i class="el-icon-caret-bottom"/>
                       </span>
                     <el-dropdown-menu slot="dropdown">
-                        <router-link  class='inlineBlock' to="">
-                            <el-dropdown-item>
-                                个人中心
-                            </el-dropdown-item>
-                        </router-link>
-                        <router-link  class='inlineBlock' to="">
-                            <el-dropdown-item>
-                                个人设置
-                            </el-dropdown-item>
-                        </router-link>
                         <el-dropdown-item divided><span  style="display:block;" @click="go_login">退出登录</span></el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>

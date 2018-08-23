@@ -2,14 +2,13 @@
     <el-row class="requestapply" >
         <el-tabs type="card"  v-model="activeName" @tab-click="handleClick()">
             <el-tab-pane label="二级域名解析" class="tab_top" name="second">
-                <yuming></yuming>
+                <yuming :yuming_tab="infordata_yuming" ></yuming>
             </el-tab-pane>
             <el-tab-pane  label="上线推广页面" class="tab_top" name="first">
-                <landpage></landpage>
+                <landpage :landpage_tab="infordata_landpage" ></landpage>
             </el-tab-pane>
-            
             <el-tab-pane label="历史申请" class="tab_top" name="third">
-               <history></history>
+               <history :history_tab="infordata_his" ></history>
             </el-tab-pane>
         </el-tabs>
     </el-row>
@@ -22,8 +21,11 @@ import history from './history/history';
 export default {
     data() {
         return{
-            activeName:'third',
-
+            activeName:'first',
+            num:0,
+            infordata_yuming:'',
+            infordata_landpage:'',
+            infordata_his:'',
         }
     },
     created(){
@@ -35,11 +37,19 @@ export default {
         history,
     },
     mounted(){
-
+        this.infordata_landpage = this.activeName
     },
     methods:{
         //tab切换事件
         handleClick(){
+            this.num++
+            if(this.activeName == 'second'){
+                this.infordata_yuming =  this.activeName + this.num
+            }else if(this.activeName =='first'){
+                this.infordata_landpage = this.activeName+ this.num
+            }else{
+                this.infordata_his = this.activeName+ this.num
+            }
 
         },
     },
@@ -54,6 +64,7 @@ export default {
     @import "@/styles/table.scss";
     .requestapply {
         width:100%;
+        height:800px;
         background: white;
         padding: 10px;
        .main{

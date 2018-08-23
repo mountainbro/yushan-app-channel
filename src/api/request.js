@@ -63,4 +63,11 @@ export function upyestatus(data) {
         data:  data,
     });
 }
-//
+//审核历史
+// audit_history
+export function audit_history(data) {
+    return fetch({
+        url: '/audit_history/'+data.id+'/'+'yuming ',
+        method: 'get',
+    });
+}

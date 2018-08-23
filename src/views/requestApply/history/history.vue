@@ -1,5 +1,5 @@
 <template>
-    <el-row class="requestapply" >
+    <el-row  >
         <div class="hio">
             <!-- 切换table列表 -->
 
@@ -11,7 +11,7 @@
             <!-- 搜索框 -->
             <el-col :span="24" >
                 <yuming :infoedata_yuming="infordata" v-if="chooseData == 'urlData'"></yuming>
-                <landpage :infoedata_ladnpage="infordata"  v-if="chooseData == 'luodiData'"></landpage>
+                <landpage :infoedata_ladnpage="infordata_land"  v-if="chooseData == 'luodiData'"></landpage>
             </el-col>
 
         </div>
@@ -26,6 +26,8 @@
         return{
             chooseData:'urlData',
             infordata:'',
+            num:0,
+            infordata_land:'',
         }
     },
     created(){
@@ -36,19 +38,23 @@
         yuming,
         landpage,
     },
-
-    mounted(){
-        this.infordata = this.chooseData;
-    },
-
+     watch:{
+         history_tab(val){
+             this.infordata = this.chooseData;
+         },
+     },
     methods:{
 // 切换二级域和落地页
         radioChange(){
-            this.infordata = this.chooseData;
-//            v-if="chooseData == 'urlData'"
+            this.num++
+            if(this.chooseData == 'urlData'){
+                this.infordata = this.chooseData +this.num ;
+            }else{
+                this.infordata_land = this.chooseData +this.num ;
+            }
         },
     },
-
+     props: ['history_tab']
 }
 </script>
 

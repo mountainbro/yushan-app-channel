@@ -1,5 +1,4 @@
 <template>
-    <el-row class="requestapply" >
         <div class="hio">
             <!-- 搜索框 -->
             <el-col :span="24" >
@@ -22,7 +21,7 @@
                             v-loading="tableshow"
                             :data="tableData1"
                             class="vue-table"
-                            height="730"
+                            height="550"
                             border >
                         <el-table-column
                                 prop="sub_date"
@@ -52,9 +51,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                                prop="true_url"
+                                label="IP">
+                            <template slot-scope="scope">
+                                {{  scope.row.ip || '无'}}
+                            </template>
+                        </el-table-column>
+
+
+                        <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
-                                <span v-if="scope.row.is_ultimate_shenhe == 0">处理中...</span>
+                                <span v-if="scope.row.is_ultimate_shenhe == 0 && scope.row.audit != 2">处理中...</span>
                                 <span v-if="scope.row.is_ultimate_shenhe == 1">已完成</span>
                                 <span v-if="scope.row.audit == 2 && scope.row.is_ultimate_shenhe == 0">驳回</span>
                             </template>
@@ -126,16 +134,39 @@
                                    </span>
                                 </div>
                             </div>
-                            <div   class="list">
+                            <div   class="list" v-if="audit_historyList.length !== 0">
                                 <div class="title">
                                     审核备注:
                                 </div>
                                 <div class='right_title'>
-                                   <span>
-                                       {{item.note}}
-                                   </span>
+                                    <div  class="shenhe_note"   v-for="data in audit_historyList">
+                                        <div class="top_icon"></div>
+
+                                        <div class="box">
+                                            <div class="header" style=" color:rgb(163, 165, 167);">
+                        <span class="name">
+                            {{data.users0.name}}
+                        </span>
+                                                <span class="date">
+                           {{data.catated_at | filterDate }}
+                        </span>
+                                            </div>
+                                            <div class="note">
+                                                <div class="left_icon">
+
+                                                    <img src="../img/duigou.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type != 2">
+                                                    <img src="../img/cha.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type == 2">
+
+                                                </div>
+                                                <div class="right_note">
+                                                    {{data.note }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div >
                                 </div>
                             </div>
+
                         </div>
                         <div  v-if="role_name != '渠道'">
                             <div :span="24" style="width:100%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
@@ -195,12 +226,11 @@
             </el-col>
 
         </div>
-    </el-row>
 </template>
 <script>
  import {mapGetters} from 'vuex';
  import {  place_advertiser_list } from '@/api/acount';
-import { domain_list,domain_shenhe1,domain_shenhe2,upyumingstatus,page_list,page_shenhe1,page_shenhe2,upyestatus} from '@/api/request';
+import { domain_list,domain_shenhe1,domain_shenhe2,upyumingstatus,audit_history} from '@/api/request';
 import search from '../../search/search';
 import {  place_to_advertise } from '@/api/acount';
 const moment = require('moment');
@@ -228,7 +258,7 @@ export default {
             },
 
             tableData1:[],
-            tableshow:false,
+            tableshow:true,
             search1:'',
             av_id:'',
 // 弹窗
@@ -239,6 +269,7 @@ export default {
             yuming_text:'',
             IP_text:'',
             link_text:'',
+            audit_historyList:[],
 // 分页
             page:'20',
             num:'1',
@@ -256,6 +287,16 @@ export default {
                    this.tableData1 =  response.data;
                     this.tableshow = false;
                     this.kehuTableLength = Number(response.page_data.count)
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            audit_history(){
+                console.log(this.shenheInfor[0].id)
+                audit_history({
+                    id:this.shenheInfor[0].id,
+                }).then(response => {
+                        this.audit_historyList = response
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -379,7 +420,9 @@ export default {
              this.IP_text = '';
              this.link_text = '';
              this.textarea_note = '';
+             this.audit_historyList = [];
             this.shenheInfor.push(val);
+            this.audit_history();
             this.jiexiBol = true;
         },
         shenheChange(){
@@ -414,4 +457,94 @@ export default {
         props: ['infoedata_yuming']
 }
 </script>
+<style rel="stylesheet/scss"  lang="scss">
+    .shenhe_note{
+        width:100%;
+        height:80px;
+        border-left:1px solid #d9d9d9;
+        position: relative;
+        .top_icon {
+            width:10px;
+            height:10px;
+            border-radius: 50%;
+            border:2px solid #0b87e7;
+            position: absolute;
+            top:-5px;
+            left:-5px;
+        }
+        .bottom_icon {
+            width:10px;
+            height:10px;
+            border-radius: 50%;
+            border:2px solid #0b87e7;
+            position: absolute;
+            bottom:-5px;
+            left:-5px;
+        }
+        .box {
+            width:100%;
+            height:70px;
+            position: absolute;
+            left:10px;
+            overflow: hidden;
+            border:1px solid #c4dfb4;
+            border-radius: 5px;
+            background: #f6ffee;
+            .header {
+                width:100%;
+                height:25px;
+                font-size: 12px;
+                padding: 0 5px;
+                background: #f6ffee;
+                .name{
+                    display: inline-block;
+                    height:100%;
+                    line-height: 25px;
+                    vertical-align: top;
+                    float: left;
+                }
+                .date {
+                    display: inline-block;
+                    height:100%;
+                    line-height: 25px;
+                    vertical-align: top;
+                    float: right;
+                    margin-right: 20px;
+                }
+            }
+            .note{
+                width:100%;
+                height:40px;
+                .left_icon{
+                    display: inline-block;
+                    width:14%;
+                    height:100%;
+                    text-align: center;
+                    line-height: 10px;
+                    vertical-align: top;
+                }
+                .right_note {
+                    display: inline-block;
+                    width:82%;
+                    height:100%;
+                    vertical-align: top;
+                    font-size: 12px;
+                    -webkit-line-clamp: 3;
+                    line-clamp: 3;
+                    line-height: 13px;
+                    -webkit-box-orient: vertical;
+                    -o-text-overflow: ellipsis;
+                    text-overflow: ellipsis;
+                    word-break: break-word;
+                    overflow: hidden;
+                }
+            }
+        }
+        .box_no{
+            border: 1px solid #e0aeb7!important;
+            background: #fff1ea!important;
+        }
+    }
+</style>
+
 
