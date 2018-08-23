@@ -53,8 +53,9 @@ export default {
 <style rel="stylesheet/scss"  lang="scss">
     @import "@/styles/table.scss";
     .requestapply {
-        padding: 10px;
+        width:100%;
         background: white;
+        padding: 10px;
        .main{
            .lis{
                padding: 12px 0  ;

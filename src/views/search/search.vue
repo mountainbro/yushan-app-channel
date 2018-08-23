@@ -1,8 +1,10 @@
 
 <template>
     <el-row >
+
         <el-col :span="24" class="search_title">
-            <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;"></input>
+            <span class="name">搜索:</span>
+            <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 20px"></input>
             <span class="name">按客户查看:</span>
             <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
                 <el-option
@@ -72,7 +74,6 @@
         margin-bottom: 5px;
         font-size: 14px;
         .name {
-            margin-left: 20px;
             margin-right: 10px;
         }
     }

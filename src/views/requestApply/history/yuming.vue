@@ -5,7 +5,7 @@
             <el-col :span="24" >
                 <el-col :span="24" class="search_title">
                     <span class="name">搜索:</span>
-                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;"></input>
+                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 20px"></input>
                     <span class="name">按客户查看:</span>
                     <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
                         <el-option
@@ -22,7 +22,7 @@
                             v-loading="tableshow"
                             :data="tableData1"
                             class="vue-table"
-                            height="550"
+                            height="730"
                             border >
                         <el-table-column
                                 prop="sub_date"
@@ -126,9 +126,19 @@
                                    </span>
                                 </div>
                             </div>
+                            <div   class="list">
+                                <div class="title">
+                                    审核备注:
+                                </div>
+                                <div class='right_title'>
+                                   <span>
+                                       {{item.note}}
+                                   </span>
+                                </div>
+                            </div>
                         </div>
                         <div  v-if="role_name != '渠道'">
-                            <div :span="24" style="width:100%;height: 1px;border: 1px solid #f5f7fa;" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
+                            <div :span="24" style="width:100%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
                             <div  style="padding: 0 20px"  v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
                                 <div   class="list">
                                     <div class="title">
@@ -239,8 +249,8 @@ export default {
             domain_list(){
                 domain_list({
                     av_id:this.av_id,
-                    page:this.page,
-                    num:this.num,
+                    'per-page':this.page,
+                    page:this.num,
                     Search_str:this.search1,
                 }).then(response => {
                    this.tableData1 =  response.data;
@@ -328,13 +338,13 @@ export default {
             'roleName'
         ])
     },
-    mounted(){
-
-        this.domain_list();
-        this.place_advertiser_list();
-        this.role_name = Object.keys( this.roleName);
+    watch:{
+        infoedata_yuming(){
+            this.domain_list();
+            this.place_advertiser_list();
+            this.role_name = Object.keys( this.roleName);
+        },
     },
-
     methods:{
 
 //历史搜索-搜索
@@ -401,7 +411,7 @@ export default {
             return   moment(time).format('YYYY-MM-DD HH:mm:ss')
         }
     },
-
+        props: ['infoedata_yuming']
 }
 </script>
 

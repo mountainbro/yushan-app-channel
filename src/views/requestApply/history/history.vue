@@ -10,8 +10,8 @@
 
             <!-- 搜索框 -->
             <el-col :span="24" >
-                <yuming v-if="chooseData == 'urlData'"></yuming>
-                <landpage v-if="chooseData == 'luodiData'"></landpage>
+                <yuming :infoedata_yuming="infordata" v-if="chooseData == 'urlData'"></yuming>
+                <landpage :infoedata_ladnpage="infordata"  v-if="chooseData == 'luodiData'"></landpage>
             </el-col>
 
         </div>
@@ -25,25 +25,27 @@
     data() {
         return{
             chooseData:'urlData',
+            infordata:'',
         }
     },
     created(){
 
     },
     components: {
+
         yuming,
         landpage,
     },
 
     mounted(){
-
-
+        this.infordata = this.chooseData;
     },
 
     methods:{
 // 切换二级域和落地页
         radioChange(){
-
+            this.infordata = this.chooseData;
+//            v-if="chooseData == 'urlData'"
         },
     },
 
@@ -52,6 +54,15 @@
 
 <style rel="stylesheet/scss"  lang="scss">
     .his_tan {
+        .search_title {
+            height:40px;
+            line-height: 40px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            .name {
+                margin-right: 10px;
+            }
+        }
         .el-dialog {
             font-size: 14px;
             width:480px;
@@ -59,8 +70,11 @@
                 padding: 0 0 0 20px ;
                 height:40px;
                 line-height: 40px;
-                font-size: 12px;
                 position: relative;
+                border-bottom: 1px solid #f5f7fa;
+                .el-dialog__title {
+                    font-size: 14px;
+                }
                 .el-dialog__headerbtn {
                     position: absolute;
                     right:10px;
@@ -72,7 +86,7 @@
             .el-dialog__body {
                 padding: 0 0 20px 0;
                 .list {
-                    margin:5px 0;
+                    margin:8px 0;
                     display: flex;
                     .title{
                         width:85px;

@@ -7,7 +7,7 @@
 
                 <el-col :span="24" class="search_title">
                     <span class="name">搜索:</span>
-                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;"></input>
+                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 20px"></input>
                     <span class="name">按客户查看:</span>
                     <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
                         <el-option
@@ -24,7 +24,7 @@
                             v-loading="tableshow"
                             :data="tableData1"
                             class="vue-table"
-                            height="550"
+                            height="730"
                             border >
                         <el-table-column
                                 prop="sub_date"
@@ -54,13 +54,6 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                                prop="true_url"
-                                label="下载包">
-                            <template slot-scope="scope">
-                                <a :href=scope.row.zip_link target="_blank"> {{  scope.row.zip_link || '无'}}</a>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
                                 <span v-if="scope.row.is_ultimate_shenhe == 0">处理中...</span>
@@ -81,7 +74,16 @@
                                 <span @click="look_infor(scope.row)">查看</span>
                             </template>
                         </el-table-column>
+                        <el-table-column
 
+                                prop="true_url"
+                                label="下载包">
+                            <template slot-scope="scope">
+                                <a :href=scope.row.zip_link target="_blank">
+                                    <img src="../img/dowm.png" style="width: 20px" alt="">
+                                </a>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <!-- 分页 -->
                     <div class="block">
@@ -137,7 +139,7 @@
                             </div>
                         </div>
                         <div  v-if="role_name != '渠道'">
-                            <div :span="24" style="width:100%;height: 1px;border: 1px solid #f5f7fa;" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
+                            <div :span="24" style="width:100%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
                             <div  style="padding: 0 20px"  v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
                                 <div   class="list">
                                     <div class="title">
@@ -242,13 +244,12 @@ export default {
             pageIndex:1,
             pageSize:20,
             kehuTableLength:0,
-
 //请求落地页
             page_list(){
                 page_list({
                     av_id:this.av_id,
-                    page:this.page,
-                    num:this.num,
+                    'per-page':this.page,
+                    page:this.num,
                     Search_str:this.search1,
                 }).then(response => {
                     this.tableData1 =  response.data;
@@ -333,13 +334,13 @@ export default {
             'roleName'
         ])
     },
-    mounted(){
-
-        this.page_list();
-        this.place_advertiser_list();
-        this.role_name = Object.keys( this.roleName);
+    watch:{
+        infoedata_ladnpage(val){
+            this.page_list();
+            this.place_advertiser_list();
+            this.role_name = Object.keys( this.roleName);
+        },
     },
-
     methods:{
 
 //历史搜索-搜索
@@ -405,6 +406,6 @@ export default {
             return   moment(time).format('YYYY-MM-DD HH:mm:ss')
         }
     },
-
+    props: ['infoedata_ladnpage']
 }
 </script>
