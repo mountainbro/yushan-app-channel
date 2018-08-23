@@ -29,12 +29,12 @@
                     </div>
                     <div class="lis" >
                         <span>二级域名：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择">
+                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择" @change="domainchange()">
                             <el-option
                                     v-for="item in urloptions"
                                     :key="item.id"
                                     :label="item.true_url"
-                                    :value="item.id">
+                                    :value="item.iframeurl">
                             </el-option>
                         </el-select>
                     </div>
@@ -57,8 +57,13 @@
                 <div class="redinfo">注：需标准页面执行，否则不予上线</div>
             </el-col>
             <el-col :span="4">
-                <iframe src="" frameborder="0"></iframe>
+                <!-- <div> {{}}+'dasdads'</div> -->
                 <div class="phone">
+                    
+                    <iframe style="position:absolute; top:23px;width:290px;height:560px;left:0;right:0;margin:0 auto;" :src="tuiguang.value2" frameborder="0"></iframe>
+                </div>
+                
+                <!-- <div class="phone">
                     <img class="logo" src="http://test.myushan.com//logo/black_zhiniao.png" alt="">
                     <div class="rules">
                         <h3>落地页规范</h3>
@@ -68,7 +73,7 @@
                         <p>4.logo，版权清晰可见</p>
                     </div>
                     <div class="banquan">北京智鸟科技有限公司版权所有</div>
-                </div>
+                </div> -->
             </el-col>
         </el-row>
         <div style="text-align:center;">
@@ -121,6 +126,7 @@ export default {
                     id:this.tuiguang.value1
                 }).then(response => {
                    this.urloptions=response.data;
+                   console.log(this.urloptions[0].iframeurl)
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -175,6 +181,10 @@ export default {
         zhanghuchange(){
             this.tuiguang.value2 = '';
             this.place_account_domain();
+        },
+        //账户change
+        domainchange(){
+
         },
         //tab切换事件
         handleClick(){
@@ -272,9 +282,9 @@ export default {
         }
         .phone{
             position: relative;
-            width: 33vw;
-            height: 59vh;
-            background:  url(http://test.myushan.com/821phone.png) no-repeat ;
+            width: 360px;
+            height: 610px;
+            background:  url(http://test.myushan.com/8231phones.png) no-repeat ;
             background-size: 100% 100%;
             .logo{
                 position: absolute;
