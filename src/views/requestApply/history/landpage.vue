@@ -5,10 +5,21 @@
             <el-col :span="24" >
 
                 <el-col :span="24" class="search_title">
-                    <span class="name">搜索:</span>
-                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 20px"></input>
-                    <span class="name">按客户查看:</span>
-                    <el-select v-model="acountselect" size="mini" placeholder="请选择" @change="acountAcount">
+                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 10px"></input>
+                    <el-date-picker
+                            v-model="hisdate"
+                            type="daterange"
+                            size="mini"
+                            @change="getDate"
+                            style="width: 200px;margin-right: 10px"
+                            :clearable="false"
+                            range-separator="-"
+                            :picker-options="pickerOptions0"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                    </el-date-picker>
+                    <span class="name">客户:</span>
+                    <el-select v-model="acountselect" size="mini" placeholder="请选择" style="margin-right: 10px" @change="acountAcount">
                         <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -16,7 +27,24 @@
                                 :value="item.id">
                         </el-option>
                     </el-select>
+                    <span class="name">审核:</span>
+                    <el-select v-model="shenhe_state" size="mini"  placeholder="请选择" @change="acountAcount">
+                        <el-option
+                                v-for="item in shenhe_options"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-col>
+
+
+                <!--日期开始时间：start_date-->
+                <!--日期结束时间：end_date-->
+                <!--按公司筛选: av_id-->
+                <!--按审核状态筛选：shenhe 1:已审核 2:已驳回 0：未审核-->
+
+
                 <!-- 表格数据展示 -->
                 <el-col :span="24">
                     <el-table
@@ -240,7 +268,27 @@ export default {
 //搜索
             search:'',
             acountselect:'',
-            options:[],
+            options:[moment().format('YYYY-MM-01'),moment().format('YYYY-MM-01')],
+            hisdate:[],
+            shenhe_state:'',
+            shenhe_options:[{
+                name:'全部',
+                id:''
+            },{
+                name:'已审核',
+                id:'1'
+            },{
+                name:'未审核',
+                id:'0'
+            },{
+                name:'已驳回',
+                id:'2'
+            }],
+            pickerOptions0: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now() - 8.64e7;
+                }
+            },
 // 下拉列表
             place_advertiser_list(){
                 place_advertiser_list({
@@ -282,6 +330,9 @@ export default {
                     'per-page':this.page,
                     page:this.num,
                     Search_str:this.search1,
+                    start_date: moment(this.hisdate[0]).format('YYYY-MM-DD'),
+                    end_date:moment(this.hisdate[1]).format('YYYY-MM-DD'),
+                    shenhe:this.shenhe_state,
                 }).then(response => {
                     this.tableData1 =  response.data;
                     this.kehuTableLength = Number(response.page_data.count)
@@ -396,7 +447,10 @@ export default {
             this.tableshow = true;
             this.av_id = this.acountselect;
             this.page_list();
-
+        },
+        getDate(){
+            this.tableshow = true;
+            this.page_list();
         },
         handleSizeChange(val) {
             this.page = val;
