@@ -18,7 +18,6 @@
     </el-row>
 </template>
 <script>
- import {mapGetters} from 'vuex';
  import yuming from './yuming';
  import landpage from './landpage';
  export default {
@@ -39,7 +38,7 @@
         landpage,
     },
      watch:{
-         history_tab(val){
+         history_tab(){
              this.num++
              this.infordata = this.chooseData +this.num
          },

@@ -126,7 +126,6 @@ export default {
                     id:this.tuiguang.value1
                 }).then(response => {
                    this.urloptions=response.data;
-                   console.log(this.urloptions[0].iframeurl)
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -138,7 +137,7 @@ export default {
                     zip_link:this.tuiguang.key,
                     submitusers:this.user.id,
                     note:this.tuiguang.coment,
-                }).then(response => {
+                }).then(() => {
                     this.tuiguang ={
                             value:'',
                             value1:'',
@@ -164,7 +163,7 @@ export default {
 
     },
     watch:{
-        landpage_tab(val){
+        landpage_tab(){
             this.place_advertiser_list();
         },
     },

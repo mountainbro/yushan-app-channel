@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import store from '../store';
 import Router from 'vue-router';
-import {roleType} from '@/utils/constant'; //权限部分
+
 
 import Layout from '../views/layout/Sidebar';
 

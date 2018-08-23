@@ -18,7 +18,6 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex';
     import {  getuptoken } from '@/api/acount';
     export default {
         data() {

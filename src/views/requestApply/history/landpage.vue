@@ -5,7 +5,7 @@
             <el-col :span="24" >
 
                 <el-col :span="24" class="search_title">
-                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 10px"></input>
+                    <input v-model="search"   @keydown.13="searchDown" style="width: 200px;height: 21px;margin-right: 10px">
                     <el-date-picker
                             v-model="hisdate"
                             type="daterange"
@@ -134,7 +134,7 @@
                 </el-col>
                 <!-- 新增需求 -->
                 <el-dialog title="需求详情" class="his_tan" :visible.sync="jiexiBol"  :close-on-click-modal="false" @close="jiexiBol = false"  >
-                    <div v-for="item in shenheInfor">
+                    <div v-for="(item,index) in shenheInfor" :key="index">
                         <div :span="24" style="padding: 10px 20px">
                             <div   class="list">
                                 <div class="title">
@@ -165,7 +165,7 @@
                                     推广链接:
                                 </div>
                                 <div class='right_title' >
-                                    <span v-for="i in JSON.parse(item.link)">
+                                    <span v-for="(i,index) in JSON.parse(item.link)" :key="index">
                                         <a :href=i target="_blank">{{i}}</a><br>
                                     </span>
                                 </div>
@@ -185,7 +185,7 @@
                                     审核备注:
                                 </div>
                                 <div class='right_title'>
-                                    <div  class="shenhe_note"   v-for="data in audit_historyList">
+                                    <div  class="shenhe_note" :key="index"  v-for="(data,index) in audit_historyList">
                                         <div class="top_icon"></div>
 
                                         <div class="box">
@@ -260,8 +260,8 @@
                         </div>
                         <div slot="footer" style="text-align: center;margin-top: 10px" class="dialog-footer" v-if="role_name != '渠道'">
                             <div v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
-                                <el-button size="mini"@click="jiexiBol = false">取 消</el-button>
-                                <el-button size="mini"type="primary" @click="push_shenhe" >确 定</el-button>
+                                <el-button size="mini" @click="jiexiBol = false">取 消</el-button>
+                                <el-button size="mini" type="primary" @click="push_shenhe" >确 定</el-button>
                             </div>
 
                         </div>
@@ -277,7 +277,6 @@
  import {  place_advertiser_list } from '@/api/acount';
 import { audit_history,page_list,page_shenhe1,page_shenhe2,upyestatus} from '@/api/request';
 import search from '../../search/search';
-import {  place_to_advertise } from '@/api/acount';
 const moment = require('moment');
 import state from '../sh_state';
 export default {
@@ -361,7 +360,6 @@ export default {
                 });
             },
             audit_history(){
-                console.log(this.shenheInfor[0].id)
                 audit_history({
                     id:this.shenheInfor[0].id,
                     name:'demand'
@@ -423,7 +421,7 @@ export default {
                 upyestatus({
                     id:this.shenheInfor[0].id,
                     link:this.link_text,
-                }).then(response => {
+                }).then(() => {
                     this.jiexiBol = false;
                     this.page_list();
                 }).catch(err => {
@@ -448,7 +446,7 @@ export default {
         ])
     },
     watch:{
-        infoedata_ladnpage(val){
+        infoedata_ladnpage(){
             this.page_list();
             this.place_advertiser_list();
             this.role_name = Object.keys( this.roleName);
@@ -463,7 +461,7 @@ export default {
             this.page_list();
         },
 //历史搜索-下拉
-        acountAcount(val){
+        acountAcount(){
             this.tableshow = true;
             this.av_id = this.acountselect;
             this.page_list();

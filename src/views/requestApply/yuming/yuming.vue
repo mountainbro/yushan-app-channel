@@ -68,7 +68,7 @@
 </template>
 <script>
 import {mapGetters} from 'vuex';
-import {  place_advertiser_list,place_to_advertise,place_account_domain,add_jiexi_url } from '@/api/acount';
+import {  place_advertiser_list,place_to_advertise,add_jiexi_url } from '@/api/acount';
 export default {
     data() {
         return{
@@ -142,7 +142,7 @@ export default {
         
     },
     watch:{
-        yuming_tab(val){
+        yuming_tab(){
             this.place_advertiser_list();
         },
     },
