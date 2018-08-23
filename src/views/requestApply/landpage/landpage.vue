@@ -29,7 +29,7 @@
                     </div>
                     <div class="lis" >
                         <span>二级域名：</span>
-                        <el-select style="width:300px;" :disabled="urlbol" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择" @change="domainchange()">
+                        <el-select style="width:300px;" :disabled="urlbol" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择" >
                             <el-option
                                     v-for="item in urloptions"
                                     :key="item.id"
@@ -77,7 +77,7 @@
             </el-col>
         </el-row>
         <div style="text-align:center;">
-            <el-button size="mini" type="primary" @click="goTuiGuang()">确 定</el-button>
+            <el-button size="mini" :disabled="bol" :loading="bol" type="primary" @click="goTuiGuang()">确 定</el-button>
             <el-button size="mini" @click="clear">清空内容</el-button>
         </div>
     </el-row>
@@ -104,6 +104,7 @@ export default {
             urlrequest:[''],
             zhanghubol:true,
             urlbol:true,
+            bol:false,
             defaultContent:'解析格式：\n产品名；前缀；主域；投放方式；客户ip地址',
             place_advertiser_list(){
                 place_advertiser_list({
@@ -151,6 +152,7 @@ export default {
                         }
                         this.$message.success('添加需求成功');
                     this.$emit('add_landpage');
+                    this.bol = true;
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -200,7 +202,7 @@ export default {
         },
         //上线推广
         goTuiGuang(){
-
+            this.bol = true;
             let _this =this;
             if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2){
                 this.$refs.child.submitUpload();
