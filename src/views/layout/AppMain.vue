@@ -27,8 +27,8 @@
         position: absolute;
         left:0;
         bottom: 0;
-        padding: 50px 20px 20px 20px;
-        border:1px solid red;
+        background: #eceef3;
+        padding: 70px 20px 20px 20px;
         box-sizing: border-box;
         overflow-x: hidden;
     }
