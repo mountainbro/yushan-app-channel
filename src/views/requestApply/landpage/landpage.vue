@@ -60,7 +60,7 @@
                 <!-- <div> {{}}+'dasdads'</div> -->
                 <div class="phone">
                     
-                    <iframe style="position:absolute; top:23px;width:290px;height:560px;left:0;right:0;margin:0 auto;" :src="tuiguang.value2" frameborder="0"></iframe>
+                    <iframe style="position:absolute; top:23px;width:259px;height:560px;left:0;right:0;margin:0 auto;" :src="tuiguang.value2" frameborder="0"></iframe>
                 </div>
                 
                 <!-- <div class="phone">
@@ -281,7 +281,7 @@ export default {
         }
         .phone{
             position: relative;
-            width: 360px;
+            width: 300px;
             height: 610px;
             background:  url(http://test.myushan.com/8231phones.png) no-repeat ;
             background-size: 100% 100%;
