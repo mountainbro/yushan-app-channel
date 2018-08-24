@@ -9,7 +9,7 @@
                             type="daterange"
                             size="mini"
                             @change="getDate"
-                            style="width: 200px;margin-right: 10px"
+                            style="width: 230px;margin-right: 10px"
                             :clearable="false"
                             range-separator="-"
                             :picker-options="pickerOptions0"
@@ -289,7 +289,7 @@ export default {
             }],
             pickerOptions0: {
                 disabledDate(time) {
-                    return time.getTime() > Date.now() - 8.64e7;
+                    return time.getTime() >= Date.now();
                 }
             },
 // 下拉列表
