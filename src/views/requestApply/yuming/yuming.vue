@@ -16,7 +16,7 @@
                      </div>
                      <div class="lis" >
                          <span class="lis_span">选择账户：</span>
-                         <el-select style="min-width:290px;" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择">
+                         <el-select style="min-width:290px;" size="mini" :disabled="zhanghubol" v-model="tuiguang.value1" filterable placeholder="请选择">
                              <el-option
                                      v-for="item in zhanghuoptions"
                                      :key="item.id"
@@ -83,6 +83,7 @@ export default {
             zhanghuoptions:[],
             urlrequest:[''],
             bol:false,
+            zhanghubol:true,
             defaultContent:'解析格式：\n产品名；前缀；主域；投放方式；客户ip地址',
             place_advertiser_list(){
                 place_advertiser_list({
@@ -152,6 +153,7 @@ export default {
         kehuchange(){
             this.place_to_advertise()
             this.tuiguang.value1 = '';
+            this.zhanghubol = false;
         },
         //清空需求内容
         clear(){
@@ -163,6 +165,7 @@ export default {
                 coment:'',
             }
             this.urlrequest = [''];
+            this.zhanghubol = true;
         },
         //添加url解析
         addurlEvent(){
