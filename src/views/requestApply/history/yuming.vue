@@ -78,7 +78,6 @@
                             </template>
                         </el-table-column>
 
-
                         <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
@@ -96,6 +95,7 @@
                         </el-table-column>
 
                         <el-table-column
+                                v-if="role_name != '渠道'"
                                 label="审核状态">
                             <template slot-scope="scope">
                                 <state :stateData=scope.row ></state>

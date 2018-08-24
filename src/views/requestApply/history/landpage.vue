@@ -73,6 +73,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                                v-if="role_name != '渠道'"
                                 label="进度" >
                             <template slot-scope="scope">
                                 <span v-if="scope.row.is_ultimate_shenhe == 0 && scope.row.audit != 2 ">

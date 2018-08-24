@@ -40,7 +40,12 @@
      watch:{
          history_tab(){
              this.num++
-             this.infordata = this.chooseData +this.num
+             if(this.chooseData == 'urlData'){
+                 this.infordata = this.chooseData +this.num ;
+             }else{
+                 this.infordata_land = this.chooseData +this.num ;
+             }
+
          },
      },
     methods:{
