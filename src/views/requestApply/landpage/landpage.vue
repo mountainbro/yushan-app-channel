@@ -134,6 +134,7 @@ export default {
                 });
             },
             create_page_task(){
+                this.bol = true;
                 create_page_task({
                     account:this.tuiguang.value1,
                     domain:this.tuiguang.value1,
@@ -152,9 +153,10 @@ export default {
                         }
                         this.$message.success('添加需求成功');
                     this.$emit('add_landpage');
-                    this.bol = true;
+                    this.bol = false;
                 }).catch(err => {
                     this.$message.error(err);
+                    this.bol = false;
                 });
             },
         }
@@ -213,7 +215,8 @@ export default {
         successupload(val){
             this.$message('正在提交，请稍后');
             this.tuiguang.key = val.key;
-            this.create_page_task()
+            this.create_page_task();
+            this.bol = false;
 
         },
         //添加url解析

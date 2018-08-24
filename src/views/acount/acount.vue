@@ -1,8 +1,5 @@
 <template>
    <el-row class="acount_box">
-       <el-col :span="24" class="acount_title">
-           账户列表
-       </el-col>
        <search @searchChange="searchChange" @acountChange="acountChange"></search>
        <!--<upload ref="child"></upload>-->
        <el-col :span="24">
