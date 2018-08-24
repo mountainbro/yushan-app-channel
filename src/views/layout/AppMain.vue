@@ -24,11 +24,8 @@
     .box_qd {
         width:100%;
         height:100%;
-        position: absolute;
-        left:0;
-        bottom: 0;
         background: #eceef3;
-        padding: 70px 20px 20px 20px;
+        padding: 20px ;
         box-sizing: border-box;
         overflow-x: hidden;
     }

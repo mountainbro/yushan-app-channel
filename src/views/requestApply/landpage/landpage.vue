@@ -1,80 +1,87 @@
 <template>
     <el-row class="landpageBox">
-        <el-row :gutter="20">
-            <el-col :span="10">
-                <div class="main">
-                    <!-- 新增需求 -->
-                    <!-- <div class="titles">上传素材</div>    -->
-                    <div class="lis" >
-                        <span>选择客户：</span>
-                        <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择"  @change="kehuchange">
-                            <el-option
-                                    v-for="item in companyoptions"
-                                    :key="item.id"
-                                     :label="item.advertiser"
-                                     :value="item.id">
-                            </el-option>
-                        </el-select>
+        <el-row >
+
+            <el-col :span="24">
+                <el-col :span="8">
+                    <div class="main">
+                        <!-- 新增需求 -->
+                        <!-- <div class="titles">上传素材</div>    -->
+                        <div class="lis" >
+                            <span>选择客户：</span>
+                            <el-select style="width:300px;" size="mini" v-model="tuiguang.value" filterable placeholder="请选择"  @change="kehuchange">
+                                <el-option
+                                        v-for="item in companyoptions"
+                                        :key="item.id"
+                                        :label="item.advertiser"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="lis" >
+                            <span>选择账户：</span>
+                            <el-select style="width:300px;" :disabled="zhanghubol" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择" @change="zhanghuchange">
+                                <el-option
+                                        v-for="item in zhanghuoptions"
+                                        :key="item.id"
+                                        :label="item.a_users"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="lis" >
+                            <span>二级域名：</span>
+                            <el-select style="width:300px;" :disabled="urlbol" size="mini" v-model="iframeurl" filterable placeholder="请选择" @change="logo_change">
+                                <el-option
+                                        v-for="(item,key) in urloptions"
+                                        :key="item.id"
+                                        :label="item.true_url"
+                                        :value="key">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="lis" >
+                            <span>详细需求：</span>
+                            <el-input size="mini" v-model="tuiguang.coment"
+                                      type="textarea"
+                                      style=""
+                                      :autosize="{ minRows: 4, maxRows: 6}"
+                                      placeholder="请输入内容"></el-input>
+                        </div>
+                        <div class="lis" >
+                            <span style="float:left;"> 素材包：</span>
+                            <upload style="float:left;margin-left:1em;" ref="child" @successupload='successupload'></upload>
+                        </div>
                     </div>
-                    <div class="lis" >
-                        <span>选择账户：</span>
-                        <el-select style="width:300px;" :disabled="zhanghubol" size="mini" v-model="tuiguang.value1" filterable placeholder="请选择" @change="zhanghuchange">
-                            <el-option
-                                    v-for="item in zhanghuoptions"
-                                    :key="item.id"
-                                     :label="item.a_users"
-                                     :value="item.id">
-                            </el-option>
-                        </el-select>
+                </el-col>
+                <el-col :span="16">
+                    <el-col :span="12">
+                        <div class="titles">标准合规页面样例</div>
+                        <div class="redinfo">注：需标准页面执行，否则不予上线</div>
+                        <div class="box_logo" v-if="logo_white !=''">
+                            <div>
+                                <img style="width: 80px" :src="logo_white" alt="">
+                                <p style="font-size: 12px;    word-wrap: break-word; word-break: normal;">
+                                    {{ logo_white}}
+                                </p>
+                            </div>
+                            <div>
+                                <img style="width: 80px" :src="logo_black" alt="">
+                                <p style="font-size: 12px;    word-wrap: break-word; word-break: normal;">
+                                    {{ logo_black}}
+                                </p>
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :span="12">
+                </el-col>
+
+                    <div class="phone">
+                        <iframe style="position:absolute; top:23px;width:259px;height:560px;left:0;right:0;margin:0 auto;" :src="tuiguang.value2" frameborder="0"></iframe>
                     </div>
-                    <div class="lis" >
-                        <span>二级域名：</span>
-                        <el-select style="width:300px;" :disabled="urlbol" size="mini" v-model="tuiguang.value2" filterable placeholder="请选择" >
-                            <el-option
-                                    v-for="item in urloptions"
-                                    :key="item.id"
-                                    :label="item.true_url"
-                                    :value="item.iframeurl">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="lis" >
-                        <span>详细需求：</span>
-                        <el-input size="mini" v-model="tuiguang.coment"
-                                  type="textarea"
-                                  style=""
-                                  :autosize="{ minRows: 4, maxRows: 6}"
-                                  placeholder="请输入内容"></el-input>
-                    </div>
-                    <div class="lis" >
-                        <span style="float:left;"> 素材包：</span>
-                        <upload style="float:left;margin-left:1em;" ref="child" @successupload='successupload'></upload>
-                    </div>
-                </div>
+                </el-col>
             </el-col>
-            <el-col :span="4">
-                <div class="titles">标准合规页面样例</div>
-                <div class="redinfo">注：需标准页面执行，否则不予上线</div>
-            </el-col>
-            <el-col :span="4">
-                <!-- <div> {{}}+'dasdads'</div> -->
-                <div class="phone">
-                    
-                    <iframe style="position:absolute; top:23px;width:259px;height:560px;left:0;right:0;margin:0 auto;" :src="tuiguang.value2" frameborder="0"></iframe>
-                </div>
-                
-                <!-- <div class="phone">
-                    <img class="logo" src="http://test.myushan.com//logo/black_zhiniao.png" alt="">
-                    <div class="rules">
-                        <h3>落地页规范</h3>
-                        <p>1.严禁自动下载</p>
-                        <p>2.严禁全屏下载</p>
-                        <p>3.只有按钮点击下载</p>
-                        <p>4.logo，版权清晰可见</p>
-                    </div>
-                    <div class="banquan">北京智鸟科技有限公司版权所有</div>
-                </div> -->
-            </el-col>
+
         </el-row>
         <div style="text-align:center;">
             <el-button size="mini" :disabled="bol" :loading="bol" type="primary" @click="goTuiGuang()">确 定</el-button>
@@ -89,6 +96,8 @@ import {  place_advertiser_list,place_to_advertise,place_account_domain,create_p
 export default {
     data() {
         return{
+            logo_white:'',
+            logo_black:'',
             tuiguang:{
                 value:'',
                 value1:'',
@@ -98,6 +107,7 @@ export default {
                 coment:'',
                 key:'',
             },
+            iframeurl:'',
             companyoptions:[],
             zhanghuoptions:[],
             urloptions:[],
@@ -137,7 +147,7 @@ export default {
                 this.bol = true;
                 create_page_task({
                     account:this.tuiguang.value1,
-                    domain:this.tuiguang.value1,
+                    domain:this.tuiguang.domain,
                     zip_link:this.tuiguang.key,
                     submitusers:this.user.id,
                     note:this.tuiguang.coment,
@@ -174,18 +184,28 @@ export default {
         },
     },
     methods:{
-   
+// 获取logo
+        logo_change(val){
+            if(this.urloptions[val].logourl[0]){
+                this.logo_white = this.urloptions[val].logourl[0];
+                this.logo_black = this.urloptions[val].logourl[1];
+            }
+            this.tuiguang.domain = this.urloptions[val].domain_id;
+
+
+            this.tuiguang.value2 = this.urloptions[val].iframeurl
+        },
         //客户change
         kehuchange(){
             this.tuiguang.value1 = '';
-            this.tuiguang.value2 = '';
+            this.iframeurl = '';
             this.place_to_advertise()
             this.zhanghubol = false;
             
         },
         //账户change
         zhanghuchange(){
-            this.tuiguang.value2 = '';
+            this.iframeurl = '';
             this.place_account_domain();
             this.urlbol = false;
         },
@@ -251,6 +271,14 @@ export default {
             font-size: 12px;
             color: #F56C6C;
         }
+        .box_logo {
+            width:100%;
+            border:1px dashed orangered;
+            background: #bac6d8;
+            margin-top: 50px;
+            border-radius: 15px;
+            padding: 20px;
+        }
         .main{
             .lis{
                 padding: 12px 0  ;
@@ -269,8 +297,6 @@ export default {
                     line-height: 28px!important;
                 }
 
-
-
             }
 
         }
@@ -280,6 +306,7 @@ export default {
             height: 610px;
             background:  url(http://test.myushan.com/8231phones.png) no-repeat ;
             background-size: 100% 100%;
+            float: right;
             .logo{
                 position: absolute;
                 width: 10%;

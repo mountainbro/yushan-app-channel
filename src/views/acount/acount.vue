@@ -57,7 +57,7 @@
 </template>
 <script>
     import { mapGetters } from 'vuex';
-    import {  place_advertiser_list,place_to_advertise } from '@/api/acount';
+    import {  place_to_advertise } from '@/api/acount';
     //    import upload from '../upload/upload';
         import search from '../search/search';
 

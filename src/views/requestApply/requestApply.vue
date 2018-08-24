@@ -70,6 +70,9 @@ export default {
 </script>
 <style rel="stylesheet/scss"  lang="scss">
     @import "@/styles/table.scss";
+    .el-tabs__content {
+        overflow: auto;
+    }
     .requestapply {
 
         width:100%;
@@ -77,6 +80,7 @@ export default {
         background: white;
         box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
         padding:20px;
+
        .main{
            .lis{
                padding: 12px 0  ;
