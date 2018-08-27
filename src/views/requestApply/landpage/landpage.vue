@@ -50,7 +50,7 @@
                         </div>
                         <div class="lis" >
                             <span style="float:left;"> 素材包：</span>
-                            <upload style="float:left;margin-left:1em;" ref="child" @successupload='successupload'></upload>
+                            <upload @upload="upload" style="float:left;margin-left:1em;" ref="child" @successupload='successupload'></upload>
                         </div>
                     </div>
                 </el-col>
@@ -190,9 +190,7 @@ export default {
                 this.logo_white = this.urloptions[val].logourl[0];
                 this.logo_black = this.urloptions[val].logourl[1];
             }
-            this.tuiguang.domain = this.urloptions[val].domain_id;
-
-
+            this.tuiguang.domain = this.urloptions[val].id;
             this.tuiguang.value2 = this.urloptions[val].iframeurl
         },
         //客户change
@@ -230,7 +228,11 @@ export default {
                 this.$refs.child.submitUpload();
             }else{
                 _this.$message.error('信息没有添加完成');
+                this.bol = false;
             }
+        },
+        upload(){
+            this.bol = false;
         },
         successupload(val){
             this.$message('正在提交，请稍后');
