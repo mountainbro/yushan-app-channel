@@ -126,6 +126,7 @@ export default {
                     this.$emit('add_url');
                 }).catch(err => {
                     this.$message.error(err);
+                    this.bol = false;
                 });
             },
 
