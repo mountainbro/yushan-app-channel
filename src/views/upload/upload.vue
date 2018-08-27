@@ -61,6 +61,7 @@
             submitUpload() {
                 if(this.$refs.upload.uploadFiles.length  == 0){
                     this.$message('请先上传文件夹');
+                    this.$emit('upload');
                 }
                 this.$refs.upload.submit();
             },

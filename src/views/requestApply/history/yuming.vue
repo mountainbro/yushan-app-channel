@@ -81,7 +81,7 @@
                         <el-table-column
                                 label="进度" >
                             <template slot-scope="scope">
-                                <span v-if="scope.row.is_ultimate_shenhe == 0">
+                                <span v-if="scope.row.is_ultimate_shenhe == 0 && scope.row.audit != 2 ">
                                     <i style="width: 5px;height: 5px;background: #a4a4a4;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
                                     处理中</span>
                                 <span v-if="scope.row.is_ultimate_shenhe == 1">
