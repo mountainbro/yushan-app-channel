@@ -33,7 +33,6 @@
 
     },
     components: {
-
         yuming,
         landpage,
     },

@@ -1,9 +1,9 @@
 
 <template>
-    <el-row style="height: 100%;width: 100%; position: absolute;" class="login_Box">
+    <el-row  style="height: 100%;width: 100%; position: absolute;" class="login_Box">
         <img src="./img/web_login_bg.jpg" style="width: 100%;position: absolute;left: 0;right: 0;top: 0;bottom: 0;z-index: -1" alt="">
        <el-col :span="24" style="text-align: center;padding: 100px">
-           <div class="login" >
+           <div  class="login" >
                <div class="message">
                    渠道管理系统-管理登录
                </div>
@@ -17,7 +17,7 @@
                        <el-input type="password" class="textInput" v-model="loginData.password" auto-complete="off" placeholder="密码"></el-input>
                    </el-form-item>
                    <el-form-item style="width:100%;margin-top: 50px">
-                       <el-button type="primary" style="width:100%;padding-top: 20px;padding-bottom: 20px;font-size: 16px" class="loginPull" @click.native.prevent="login" >立刻登录</el-button>
+                       <el-button type="primary" style="width:100%;padding-top: 20px;padding-bottom: 20px;font-size: 16px" class="loginPull" @click.native.prevent="login"  >立刻登录</el-button>
                    </el-form-item>
                </el-form>
            </div>
@@ -50,6 +50,14 @@
             }
         },
         mounted() {
+        },
+        created(){
+            let _this = this;
+            document.onkeydown = function(e){
+                if(e.which == '13'){
+                    _this.login();
+                }
+            }
         },
         methods: {
             ...mapActions([

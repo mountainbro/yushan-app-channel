@@ -2,10 +2,10 @@
     <el-row class="requestapply" >
         <el-tabs type="card"  v-model="activeName" @tab-click="handleClick()">
             <el-tab-pane label="二级域名解析" class="tab_top" name="second">
-                <yuming :yuming_tab="infordata_yuming" @add_url="add_url"></yuming>
+                <yuming ref="yuming" :yuming_tab="infordata_yuming" @add_url="add_url"></yuming>
             </el-tab-pane>
             <el-tab-pane  label="上线推广页面" class="tab_top" name="first">
-                <landpage :landpage_tab="infordata_landpage" @add_landpage="add_landpage"></landpage>
+                <landpage ref="landpage" :landpage_tab="infordata_landpage" @add_landpage="add_landpage"></landpage>
             </el-tab-pane>
             <el-tab-pane label="历史申请" class="tab_top" name="third">
                <history :history_tab="infordata_his" ></history>
@@ -21,7 +21,7 @@ import history from './history/history';
 export default {
     data() {
         return{
-            activeName:'first',
+            activeName:'second',
             num:0,
             infordata_yuming:'',
             infordata_landpage:'',
@@ -37,7 +37,7 @@ export default {
         history,
     },
     mounted(){
-        this.infordata_landpage = this.activeName
+        this.$refs.yuming.place_advertiser_list();
     },
     methods:{
         add_url(){
@@ -50,11 +50,13 @@ export default {
         },
         //tab切换事件
         handleClick(){
-            this.num++
+            this.num++;
             if(this.activeName == 'second'){
-                this.infordata_yuming =  this.activeName + this.num
+                this.$refs.yuming.clear();
+                this.$refs.yuming.place_advertiser_list();
             }else if(this.activeName =='first'){
-                this.infordata_landpage = this.activeName+ this.num
+                this.$refs.landpage.clear();
+                this.$refs.landpage.place_advertiser_list();
             }else{
                 this.infordata_his = this.activeName+ this.num
             }
