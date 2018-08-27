@@ -153,15 +153,16 @@ export default {
                     note:this.tuiguang.coment,
                 }).then(() => {
                     this.tuiguang ={
-                            value:'',
-                            value1:'',
-                            value2:'',
-                            usrName:'',
-                            domain:'',
-                            coment:'',
-                            key:'',
-                        }
-                        this.$message.success('添加需求成功');
+                        value:'',
+                        value1:'',
+                        value2:'',
+                        usrName:'',
+                        domain:'',
+                        coment:'',
+                        key:'',
+                    }
+                    this.$message.success('添加需求成功');
+                    this.iframeurl = '';
                     this.$emit('add_landpage');
                     this.bol = false;
                 }).catch(err => {
@@ -179,9 +180,7 @@ export default {
 
     },
     watch:{
-        landpage_tab(){
-            this.place_advertiser_list();
-        },
+        
     },
     methods:{
 // 获取logo
@@ -216,9 +215,13 @@ export default {
                 usrName:'',
                 domain:'',
                 coment:'',
+                key:''
             }
             this.zhanghubol = true;
             this.urlbol = true;
+            this.iframeurl = '';
+            this.logo_white = '';
+            this.logo_black = '';
         },
         //上线推广
         goTuiGuang(){
@@ -226,6 +229,7 @@ export default {
             let _this =this;
             if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2){
                 this.$refs.child.submitUpload();
+                
             }else{
                 _this.$message.error('信息没有添加完成');
                 this.bol = false;

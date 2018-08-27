@@ -57,7 +57,7 @@
 
                  </div>
                  <div style="text-align:center;">
-                    <el-button size="mini" :disabled="bol" :loading="bol" type="primary" @click="gojiexi()">确 定</el-button>
+                    <el-button size="mini" type="primary" @click="gojiexi()">确 定</el-button>
                     <el-button size="mini" @click="clear">清空内容</el-button>
                 </div>
              </el-col>
@@ -144,9 +144,7 @@ export default {
         
     },
     watch:{
-        yuming_tab(){
-            this.place_advertiser_list();
-        },
+        
     },
     methods:{
 
