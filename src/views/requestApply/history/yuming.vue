@@ -34,6 +34,7 @@
                                 :value="item.id">
                         </el-option>
                     </el-select>
+                    <el-button size="mini" style="float: right;width: 80px;" type="primary" @click="Excel">导出</el-button>
                 </el-col>
                 <!-- 表格数据展示 -->
                 <el-col :span="24">
@@ -98,7 +99,7 @@
                                 v-if="role_name != '渠道'"
                                 label="审核状态">
                             <template slot-scope="scope">
-                                <state :stateData=scope.row ></state>
+                                <state :stateData='{shenhe:scope.row ,num:2}'></state>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -181,8 +182,8 @@
                                             <div class="note">
                                                 <div class="left_icon">
 
-                                                    <img src="../img/duigou.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type != 2">
-                                                    <img src="../img/cha.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type == 2">
+                                                    <img src="../../../img/duigou.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;" v-if="data.type != 2">
+                                                    <img src="../../../img/cha.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;" v-if="data.type == 2">
 
                                                 </div>
                                                 <div class="right_note">
@@ -196,7 +197,7 @@
 
                         </div>
                         <div  v-if="role_name != '渠道'">
-                            <div :span="24" style="width:99%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
+                            <div :span="24" style="width:99%;height: 1px;border-top: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
                             <div  style="padding: 0 20px"  v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
                                 <div   class="list">
                                     <div class="title">
@@ -263,13 +264,15 @@
 import { domain_list,domain_shenhe1,domain_shenhe2,upyumingstatus,audit_history} from '@/api/request';
 import search from '../../search/search';
 const moment = require('moment');
-import state from '../sh_state';
+import state from '../../../utils/sh_state';
 export default {
     data() {
         return{
             role_name:'',
 //搜索
             search:'',
+            start_date:'',
+            end_date:'',
             acountselect:'',
             options:[moment().format('YYYY-MM-01'),moment().format('YYYY-MM-01')],
             hisdate:[],
@@ -320,6 +323,7 @@ export default {
             link_text:'',
             audit_historyList:[],
 // 分页
+            count:0,
             page:'20',
             num:'1',
             pageIndex:1,
@@ -332,13 +336,49 @@ export default {
                     'per-page':this.page,
                     page:this.num,
                     Search_str:this.search1,
-                    start_date: moment(this.hisdate[0]).format('YYYY-MM-DD'),
-                    end_date:moment(this.hisdate[1]).format('YYYY-MM-DD'),
+                    start_date: this.start_date,
+                    end_date:this.end_date,
                     shenhe:this.shenhe_state,
                 }).then(response => {
                    this.tableData1 =  response.data;
+                    this.count = response.page_data.count
                     this.tableshow = false;
                     this.kehuTableLength = Number(response.page_data.count)
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+//导出
+            Exceldomain_list(){
+                domain_list({
+                    av_id:this.av_id,
+                    'per-page':this.page,
+                    page: this.count,
+                    Search_str:this.search1,
+                    start_date: this.start_date,
+                    end_date:this.end_date,
+                    shenhe:this.shenhe_state,
+                }).then(response => {
+                   let dataExcel =  response.data.filter(function(val){
+                        val.ctime = moment(new Date(parseInt(val.ctime) * 1000)).format('YYYY-MM-DD HH:mm:ss')
+                            if(val.is_ultimate_shenhe == 0 && val.audit != 2 ){
+                                val['jingdu'] = '处理中'
+                            }else if(val.is_ultimate_shenhe == 1){
+                                val['jingdu'] = '已完成'
+                            }else if(val.audit == 2 && val.is_ultimate_shenhe == 0){
+                                val['jingdu'] = '驳回'
+                            }
+                            return val
+                    })
+                    require.ensure([], () => {
+                        const { export_json_to_excel } = require('@/vendor/Export2Excel');
+                        const tHeader = ['时间', '客户', '账户', '域名','IP','进度','解析备注'];
+                            const filterVal = ['ctime', 'advertiser', 'a_users','true_url','ip','jingdu','note'];
+                        const list = dataExcel;
+                        const data = this.formatJson(filterVal, list);
+                        export_json_to_excel(tHeader, data, '二级域名');
+                    })
+
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -431,15 +471,12 @@ export default {
             'roleName'
         ])
     },
-    watch:{
-        infoedata_yuming(){
+    methods:{
+        yumingData(){
             this.domain_list();
             this.place_advertiser_list();
             this.role_name = Object.keys( this.roleName);
         },
-    },
-    methods:{
-
 //历史搜索-搜索
         searchDown(){
             this.tableshow = true;
@@ -448,6 +485,8 @@ export default {
 
         },
         getDate(){
+            this.start_date = moment(this.hisdate[0]).format('YYYY-MM-DD');
+            this.end_date = moment(this.hisdate[0]).format('YYYY-MM-DD');
             this.tableshow = true;
             this.domain_list();
         },
@@ -492,16 +531,30 @@ export default {
                 if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 0 ){
                     this.domain_shenhe()
                 }else  if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 1 ){
-                    if(this.yuming_text == ''&& this.IP_text == ''){
-                        this.$message.error('域名/ip不能为空');
+                    if(this.yuming_text === ''){
+                        this.$message.error('域名不能为空');
+                    }else if(this.IP_text === ''){
+                        this.$message.error('ip不能为空');
                     }else{
                         this.domain_shenhe()
                     }
                 }
             }else{
-                this.domain_shenhe()
+                if(this.textarea_note == '' ){
+                    this.$message.error('驳回审核必填');
+                }else{
+                    this.domain_shenhe()
+                }
+
             }
 
+        },
+//导出
+        Excel(){
+            this.Exceldomain_list()
+        },
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
         },
     },
     filters:{

@@ -36,15 +36,8 @@
                                 :value="item.id">
                         </el-option>
                     </el-select>
+                    <el-button size="mini" style="float: right;width: 80px;" type="primary" @click="Excel">导出</el-button>
                 </el-col>
-
-
-                <!--日期开始时间：start_date-->
-                <!--日期结束时间：end_date-->
-                <!--按公司筛选: av_id-->
-                <!--按审核状态筛选：shenhe 1:已审核 2:已驳回 0：未审核-->
-
-
                 <!-- 表格数据展示 -->
                 <el-col :span="24">
                     <el-table
@@ -100,7 +93,7 @@
                         <el-table-column
                                 label="审核状态">
                             <template slot-scope="scope">
-                                <state :stateData=scope.row ></state>
+                                <state  :stateData='{shenhe:scope.row ,num:2}'></state>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -108,7 +101,7 @@
                                 label="下载包">
                             <template slot-scope="scope">
                                 <a :href="'http://'+scope.row.zip_link" target="_blank">
-                                    <img src="../img/dowm.png" style="width: 20px" alt="">
+                                    <img src="../../../img/dowm.png" style="width: 20px" alt="">
                                 </a>
                             </template>
                         </el-table-column>
@@ -201,8 +194,8 @@
                                             <div class="note">
                                                 <div class="left_icon">
 
-                                                    <img src="../img/duigou.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type != 2">
-                                                    <img src="../img/cha.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;"  v-if="data.type == 2">
+                                                    <img src="../../../img/duigou.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;" v-if="data.type != 2">
+                                                    <img src="../../../img/cha.png" alt="" style="width: 18px;display: inline-block;vertical-align: middle;" v-if="data.type == 2">
 
                                                 </div>
                                                 <div class="right_note">
@@ -215,7 +208,7 @@
                             </div>
                         </div>
                         <div  v-if="role_name != '渠道'">
-                            <div :span="24" style="width:99%;height: 1px;border: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
+                            <div :span="24" style="width:99%;height: 1px;border-top: 1px solid #f5f7fa;margin-top: 30px" v-if="item.audit != 2 && item.is_ultimate_shenhe != 1"></div>
                             <div  style="padding: 0 20px"  v-if="item.audit != 2 && item.is_ultimate_shenhe != 1">
                                 <div   class="list">
                                     <div class="title">
@@ -279,13 +272,15 @@
 import { audit_history,page_list,page_shenhe1,page_shenhe2,upyestatus} from '@/api/request';
 import search from '../../search/search';
 const moment = require('moment');
-import state from '../sh_state';
+import state from '../../../utils/sh_state';
 export default {
     data() {
         return{
             role_name:'',
 //搜索
             search:'',
+            start_date:'',
+            end_date:'',
             acountselect:'',
             options:[moment().format('YYYY-MM-01'),moment().format('YYYY-MM-01')],
             hisdate:[],
@@ -337,6 +332,7 @@ export default {
             link_text:'',
             audit_historyList:[],
 // 分页
+            count:0,
             page:'20',
             num:'1',
             pageIndex:1,
@@ -349,13 +345,48 @@ export default {
                     'per-page':this.page,
                     page:this.num,
                     Search_str:this.search1,
-                    start_date: moment(this.hisdate[0]).format('YYYY-MM-DD'),
-                    end_date:moment(this.hisdate[1]).format('YYYY-MM-DD'),
+                    start_date: this.start_date,
+                    end_date:this.end_date,
                     shenhe:this.shenhe_state,
                 }).then(response => {
                     this.tableData1 =  response.data;
                     this.kehuTableLength = Number(response.page_data.count)
                     this.tableshow = false;
+                    this.count = response.page_data.count
+                }).catch(err => {
+                    this.$message.error(err);
+                });
+            },
+            Exceldomain_list(){
+                page_list({
+                    av_id:this.av_id,
+                    'per-page':this.page,
+                    page:this.count,
+                    Search_str:this.search1,
+                    start_date: this.start_date,
+                    end_date:this.end_date,
+                    shenhe:this.shenhe_state,
+                }).then(response => {
+                    let dataExcel =  response.data.filter(function(val){
+                        val.ctime = moment(new Date(parseInt(val.ctime) * 1000)).format('YYYY-MM-DD HH:mm:ss')
+                        if(val.is_ultimate_shenhe == 0 && val.audit != 2 ){
+                            val['jingdu'] = '处理中'
+                        }else if(val.is_ultimate_shenhe == 1){
+                            val['jingdu'] = '已完成'
+                        }else if(val.audit == 2 && val.is_ultimate_shenhe == 0){
+                            val['jingdu'] = '驳回'
+                        }
+                        return val
+                    })
+                    require.ensure([], () => {
+                        const { export_json_to_excel } = require('@/vendor/Export2Excel');
+                        const tHeader = ['时间', '客户', '账户', '域名','进度','推广链接','解析备注'];
+                        const filterVal = ['ctime', 'advertiser', 'a_users','true_url','jingdu','link','note'];
+                        const list = dataExcel;
+                        const data = this.formatJson(filterVal, list);
+                        export_json_to_excel(tHeader, data, '落地页');
+                    })
+
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -446,15 +477,13 @@ export default {
             'roleName'
         ])
     },
-    watch:{
-        infoedata_ladnpage(){
+
+    methods:{
+        landData(){
             this.page_list();
             this.place_advertiser_list();
             this.role_name = Object.keys( this.roleName);
         },
-    },
-    methods:{
-
 //历史搜索-搜索
         searchDown(){
             this.tableshow = true;
@@ -468,6 +497,8 @@ export default {
             this.page_list();
         },
         getDate(){
+            this.start_date = moment(this.hisdate[0]).format('YYYY-MM-DD');
+            this.end_date = moment(this.hisdate[0]).format('YYYY-MM-DD');
             this.tableshow = true;
             this.page_list();
         },
@@ -513,9 +544,20 @@ export default {
                     }
                 }
             }else{
-                this.page_shenhe();
-            }
+                if(this.textarea_note == '' ){
+                    this.$message.error('驳回审核必填');
+                }else{
+                    this.page_shenhe();
+                }
 
+            }
+        },
+ //导出
+        Excel(){
+            this.Exceldomain_list()
+        },
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
         },
     },
     filters:{

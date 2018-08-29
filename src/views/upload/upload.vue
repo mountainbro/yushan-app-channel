@@ -12,7 +12,6 @@
                    :data='form'>
             <el-button size="small" style="padding: 8px 20px" type="primary">点击上传</el-button>
         </el-upload>
-        <span style="color: rgb(173, 170, 168);font-size:12px;">仅支持扩展名未.zip的文件</span>
         <b>上传进度</b>：{{ loaded }} MB / {{ fileSize }} MB, {{ percent }}%<br/>
     </el-row>
 </template>
@@ -50,7 +49,7 @@
 // 上传
             beforeUpload (file) {
                 this.fileName = file.name;
-                this.form.key = file.name
+                this.form.key = (new Date()).getTime() + file.name;
             },
  //文件上传时 的钩子
             handleProgress (event) {
@@ -76,7 +75,8 @@
             },
             handleError (error) {
                 this.result = error.toString()
-                this.$message.error('文件上传失败');
+                this.$refs.upload.clearFiles();
+                this.$message.error('文件上传失败，请重新提交');
             },
         },
         destroyed() {

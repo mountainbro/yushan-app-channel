@@ -51,14 +51,14 @@
         },
         mounted() {
         },
-        created(){
-            let _this = this;
-            document.onkeydown = function(e){
-                if(e.which == '13'){
-                    _this.login();
-                }
-            }
-        },
+//        created(){
+//            let _this = this;
+//            document.onkeydown = function(e){
+//                if(e.which == '13'){
+//                    _this.login();
+//                }
+//            }
+//        },
         methods: {
             ...mapActions([
                     'getLogin',
@@ -69,6 +69,7 @@
                 }
             },
             login(){
+                this.$message('正在登陆...');
                 this.getLogin(this.loginData).then(response => {
                     if(response == 'true'){
                         this.$router.push({ name: '/acount' });

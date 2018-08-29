@@ -9,8 +9,8 @@ import Layout from '../views/layout/Sidebar';
 import Login from '../views/login/';
 import acount from '../views/acount/acount';
 import requestApply from '../views/requestApply/requestApply';
-
-
+//续费管理
+import renew_list from '../views/renewAdministration/renewAdministration';
 
 Vue.use(Router);
 
@@ -53,9 +53,9 @@ export const constantRouterMap = [
     //     ]
     // },
     {
-        path: '/demo2',
+        path: '/requestApply',
         component: Layout,
-        redirect: '/demo2/requestApply',
+        redirect: '/requestApply/requestApply',
         meta: {title: '需求申请'},
         name: 'requestApply',
         noDropdown: true,
@@ -63,7 +63,17 @@ export const constantRouterMap = [
             {path: 'requestApply', component: requestApply, name: 'requestApply'},
         ]
     },
-
+    {
+        path: '/renew',
+        component: Layout,
+        redirect: '/renew/renew_list',
+        meta: {title: '续费管理'},
+        name: 'renew_list',
+        noDropdown: true,
+        children: [
+            {path: 'renew_list', component: renew_list, name: 'renew_list'},
+        ]
+    },
 ]
 store.state.permission.routers = constantRouterMap;
 export default new Router({

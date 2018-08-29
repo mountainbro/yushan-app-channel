@@ -10,8 +10,8 @@
 
             <!-- 搜索框 -->
             <el-col :span="24" >
-                <yuming :infoedata_yuming="infordata" v-if="chooseData == 'urlData'"></yuming>
-                <landpage :infoedata_ladnpage="infordata_land"  v-if="chooseData == 'luodiData'"></landpage>
+                <yuming ref="yuming" :infoedata_yuming="infordata" v-if="chooseData == 'urlData'"></yuming>
+                <landpage ref="land" :infoedata_ladnpage="infordata_land"  v-if="chooseData == 'luodiData'"></landpage>
             </el-col>
 
         </div>
@@ -40,9 +40,10 @@
          history_tab(){
              this.num++
              if(this.chooseData == 'urlData'){
-                 this.infordata = this.chooseData +this.num ;
+                 this.$refs.yuming.yumingData();
              }else{
-                 this.infordata_land = this.chooseData +this.num ;
+                 this.$refs.land.landData();
+
              }
 
          },
@@ -52,9 +53,9 @@
         radioChange(){
             this.num++
             if(this.chooseData == 'urlData'){
-                this.infordata = this.chooseData +this.num ;
+                this.$refs.yuming.yumingData();
             }else{
-                this.infordata_land = this.chooseData +this.num ;
+                this.$refs.land.landData();
             }
         },
     },

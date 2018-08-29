@@ -2,7 +2,7 @@
     <el-row class="header">
         <el-col :span="24">
             <el-col :span="18" class="left_header">
-                <span class="header_title">工作台</span>
+                <span class="header_title">需求管理平台</span>
                 <el-menu :default-active="activeIndex"  mode="horizontal" >
                     <template v-for="(item,index) in permissionRoutes" v-if="!item.hidden">
                         <el-menu-item :index="item.path" :key="index"  v-if="item.children.length<=1">
@@ -46,7 +46,7 @@
                     <!--</el-dropdown-menu>-->
                 <!--</el-dropdown>-->
                 <el-dropdown trigger="click">
-                      <span class="el-dropdown-link">
+                      <span class="el-dropdown-link" style="cursor: pointer">
                         {{user.name}}
                         <i class="el-icon-caret-bottom"/>
                       </span>
