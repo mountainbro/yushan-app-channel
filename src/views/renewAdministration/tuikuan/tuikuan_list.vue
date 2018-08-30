@@ -116,7 +116,8 @@
 
             <!-- 需求 -->
             <el-dialog title="退款详情"  class="his_tan xuqiuInfor "  :visible.sync="jiexiBol"  :close-on-click-modal="false" @close="jiexiBol = false"  >
-                    <div  style="padding: 0 20px" class="infor" v-for="(data,key) in listInfor" :key="key">
+                <div v-for="(data,key) in listInfor" :key="key">
+                    <div  style="padding: 0 20px" class="infor"  >
                         <div   class="list">
                             <div class="title">
                                 退款金额:
@@ -125,12 +126,16 @@
                                 {{data.money}}
                             </div>
                         </div>
-                        <div   class="list">
+                        <div   class="list list_right">
                             <div  class="title">
                                 账户名称:
                             </div>
                             <div class='right_title'>
-                                {{data.a_users}}
+                               <span>
+                                        <el-tooltip :content="data.a_users" placement="top" effect="light">
+                                             <span>{{data.a_users}}</span>
+                                        </el-tooltip>
+                                   </span>
                             </div>
                         </div>
                         <div   class="list">
@@ -141,7 +146,7 @@
                                 {{data.prlname}}
                             </div>
                         </div>
-                        <div   class="list">
+                        <div   class="list list_right" >
                             <div class="title">
                                 退款日期:
                             </div>
@@ -161,7 +166,7 @@
                                    </span>
                             </div>
                         </div>
-                        <div   class="list">
+                        <div   class="list list_right">
                             <div class="title">
                                 提交人:
                             </div>
@@ -172,17 +177,17 @@
                             </div>
                         </div>
                     </div>
-                    <div  style="padding: 0 20px"   class="noteInfor"  v-for="(data,key) in listInfor" :key="key">
+                    <div  style="padding: 0 20px"   class="noteInfor" >
                         <div   class="list">
                             <div class="title">
                                 备注:
                             </div>
                             <div class='right_title'>
-                                {{data.note || '空'}}
+                                {{data.note || '无'}}
                             </div>
                         </div>
                     </div>
-
+                </div>
             </el-dialog>
         </el-col>
 
@@ -230,6 +235,7 @@
                         start_date: this.start_date,
                         end_date:this.end_date,
                         shenhe:1,
+                        qudao:1,
                     }).then(response => {
                         this.tableData1 =  response.data;
                         this.tableshow = false;

@@ -76,7 +76,7 @@
                             label="进度" >
                         <template slot-scope="scope">
                                 <span v-if="scope.row.is_ultimate_shenhe == 0 &&  scope.row.audit != 2">
-                                    <i style="width: 5px;height: 5px;background: #a4a4a4;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
+
                                     处理中</span>
                             <span v-if="scope.row.is_ultimate_shenhe == 1">
                                      <i style="width: 5px;height: 5px;background: #52c41a ;display: inline-block;vertical-align: middle;border-radius: 50%"></i>
@@ -229,7 +229,7 @@
                                 <span v-if="data.payment_type == 2"> 垫付</span>
                             </div>
                         </div>
-                        <div   class="list">
+                        <div   class="list list_right">
                             <div class="title">
                                 续费金额:
                             </div>
@@ -245,7 +245,7 @@
                                 {{data.advertiser}}
                             </div>
                         </div>
-                        <div   class="list">
+                        <div   class="list list_right">
                             <div class="title">
                                 续费日期:
                             </div>
@@ -261,11 +261,13 @@
                             </div>
                             <div class='right_title'>
                                    <span>
-                                    {{data.a_users}}
+                                        <el-tooltip :content="data.a_users" placement="top" effect="light">
+                                             <span>{{data.a_users}}</span>
+                                        </el-tooltip>
                                    </span>
                             </div>
                         </div>
-                        <div   class="list">
+                        <div   class="list list_right">
                             <div class="title">
                                 提交日期:
                             </div>
@@ -292,7 +294,7 @@
                                 备注:
                             </div>
                             <div class='right_title'>
-                                {{data.note}}
+                                {{data.note || '无'}}
                             </div>
                         </div>
                     </div>
@@ -308,10 +310,10 @@
                                 <el-radio :label="2">驳回</el-radio>
                                 </el-radio-group>
                                 <span v-if="data.is_ultimate_shenhe == 1" >
-                                    <img src="@/img/duigou.png" style="width: 20px;" alt=""> 已通过
+                                    <img src="@/img/duigou.png" style="width: 15px;margin-right:3px;vertical-align: middle" alt=""><span style="vertical-align: middle;font-size: 12px;color: #999999;">已通过</span>
                                 </span>
                                 <span v-if="data.audit == 2 && data.is_ultimate_shenhe == 0" >
-                                     <img src="@/img/cha.png" style="width: 20px;"  alt=""> 未通过
+                                     <img src="@/img/cha.png" style="width: 15px;margin-right:3px;vertical-align: middle;"  alt=""> <span style="vertical-align: middle;color: #999999;">未通过</span>
                                 </span>
 
                             </div>
@@ -331,22 +333,22 @@
                             <div class='right_title'>
                                 <el-input
                                         v-if="data.is_ultimate_shenhe == 0 && data.audit == 0"
-                                        style="width: 360px;"
+                                        style="width: 426px;"
                                         type="textarea"
                                         :rows="4"
                                         placeholder="请输入内容"
                                         v-model="textarea_note">
                                 </el-input>
                                 <div v-else v-for="(data,key) in audit_historyList" :key="key">
-                                    <div >{{data.catated_at | filterTime }}</div>
-                                    <span >
+                                    <div style="color: #999999;font-size: 14px">{{data.catated_at | filterTime }}</div>
+                                    <span style="font-size: 12px;color: #999999">
                                     {{data.note || '无'}}
                                 </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div slot="footer"  style="text-align: right;margin: 10px" class="dialog-footer"  v-if="role_name != '渠道'">
+                    <div slot="footer"  style="text-align: right;margin: 10px 20px 10px 10px" class="dialog-footer"  v-if="role_name != '渠道'">
                         <div v-if="data.audit != 2 && data.is_ultimate_shenhe != 1">
                             <el-button size="mini" @click="jiexiBol = false">取 消</el-button>
                             <el-button size="mini" type="primary" @click="push_shenhe" >确 定</el-button>
@@ -359,13 +361,13 @@
                             </div>
                             <div class='right_title'>
                                 <span v-if="data.is_ultimate_shenhe == 0 &&  data.audit != 2">
-                                       <img src="@/img/dengdai.png" style="width: 15px;"   alt=""> <span>待审核</span>
+                                       <img src="@/img/dengdai.png" style="width: 15px;vertical-align: middle;margin-right: 3px"   alt=""> <span style="vertical-align: middle;color: #999999;font-size: 12px">待审核</span>
                                 </span>
                                 <span  v-if="data.is_ultimate_shenhe == 1" >
-                                        <img src="@/img/duigou.png" style="width: 15px;" alt=""><span>已通过，正在进行续费处理。大约需要一个工作日，请稍后 </span>
+                                        <img src="@/img/duigou.png" style="width: 15px;vertical-align: middle;margin-right: 3px" alt=""><span style="vertical-align: middle;color: #999999;font-size: 12px">已通过，正在进行续费处理。大约需要一个工作日，请稍后 </span>
                                 </span>
                                 <span   v-if="data.audit == 2 && data.is_ultimate_shenhe == 0">
-                                    <img src="@/img/cha.png" style="width: 15px;"  alt=""><span>未通过，请联系媒介处理 </span>
+                                    <img src="@/img/cha.png" style="width: 15px;vertical-align: middle;margin-right: 3px"  alt=""><span style="vertical-align: middle;color: #999999;font-size: 12px">未通过，请联系媒介处理 </span>
                                 </span>
                             </div>
                         </div>

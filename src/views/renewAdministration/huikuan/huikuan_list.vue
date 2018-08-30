@@ -84,8 +84,7 @@
                                 {{data.b_money}}
                             </div>
                         </div>
-
-                        <div   class="list">
+                        <div   class="list list_right">
                             <div class="title">
                                 回款日期:
                             </div>
@@ -105,7 +104,7 @@
                                    </span>
                             </div>
                         </div>
-                        <div   class="list">
+                        <div   class="list list_right">
                             <div class="title">
                                 提交人:
                             </div>
@@ -122,7 +121,7 @@
                                 备注:
                             </div>
                             <div class='right_title'>
-                                {{data.note || '空'}}
+                                {{data.note || '无'}}
                             </div>
                         </div>
                     </div>
@@ -174,6 +173,7 @@
                         start_date: this.start_date,
                         end_date:this.end_date,
                         shenhe:1,
+                        qudao:1,
                     }).then(response => {
                         this.tableData1 =  response.data.data;
                         this.tableshow = false;

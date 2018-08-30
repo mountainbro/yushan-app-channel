@@ -43,7 +43,7 @@ export function qd_uprenewshowmoney(data) {
 //退款列表
 export function qudao_tuikuanlist(data) {
     return fetch({
-        url: '/qudao_tuikuanlist',
+        url: '/qudao_tuikuanlist?page='+data.page+'&per-page='+data['per-page'],
         method: 'post',
         data:  data
     });
@@ -51,7 +51,7 @@ export function qudao_tuikuanlist(data) {
 //回款列表
 export function qudao_backmoneylist(data) {
     return fetch({
-        url: '/qudao_backmoneylist',
+        url: '/qudao_backmoneylist?page='+data.page+'&per-page='+data['per-page'],
         method: 'post',
         data:  data
     });

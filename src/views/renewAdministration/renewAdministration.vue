@@ -76,6 +76,9 @@
             .el-dialog {
                 font-size: 14px;
                 width:500px;
+                box-shadow: 0 0px 3px 0 rgba(255, 255, 255,1);
+                border:2px solid #ebebeb;
+                border-radius: 5px;
                 .el-dialog__header {
                     padding: 0 0 0 20px ;
                     height:40px;
@@ -97,27 +100,47 @@
                     padding: 0 0 20px 0;
                     .infor {
                         .list {
-                            width:50%;
+                            width:55%;
+                            margin:10px 0 ;
                             display: inline-block;
                             .title{
                                 width:85px;
                                 display: inline-block;
+                                color: black;
+                                vertical-align: top;
                             }
                             .right_title {
-                                width:200px;
+                                width:160px;
                                 display: inline-block;
-                                word-wrap: break-word;
-                                word-break: normal;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                                vertical-align: top;
+                                color: #999999;
+                            }
+                        }
+                        .list_right {
+                            width:45%;
+                            .right_title {
+                                width:130px;
                             }
                         }
                     }
                     .noteInfor {
                         .list{
+                            margin:10px 0 ;
+                            .title{
+                                color: black;
+                            }
                             width:100%;
+                            .right_title {
+                                color: #999999;
+                            }
                         }
                     }
                     .shenhe {
                         .list {
+                            margin:10px 0 ;
                             width:100%;
                             display: flex;
                             .title{
@@ -139,7 +162,8 @@
         }
         .xuqiuInfor {
             .el-dialog {
-                width: 650px;
+                width: 550px;
+
             }
         }
     }

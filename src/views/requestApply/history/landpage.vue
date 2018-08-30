@@ -498,7 +498,7 @@ export default {
         },
         getDate(){
             this.start_date = moment(this.hisdate[0]).format('YYYY-MM-DD');
-            this.end_date = moment(this.hisdate[0]).format('YYYY-MM-DD');
+            this.end_date = moment(this.hisdate[1]).format('YYYY-MM-DD');
             this.tableshow = true;
             this.page_list();
         },
