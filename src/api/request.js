@@ -71,3 +71,17 @@ export function audit_history(data) {
         method: 'get',
     });
 }
+//落地页标签
+export function upTags(data) {
+    return fetch({
+        url: '/upaccount_tags/'+data.id,
+        method: 'post',
+        data:  data,
+    });
+}
+export function tagsList() {
+    return fetch({
+        url: 'account_tags_list',
+        method: 'get',
+    });
+}

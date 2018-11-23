@@ -106,6 +106,9 @@
                         width:350px;
                         word-wrap: break-word;
                         word-break: normal;
+                        .el-checkbox{
+                            margin-left: 10px!important;
+                        }
                     }
                 }
                 .add_infor {

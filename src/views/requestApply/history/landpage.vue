@@ -174,6 +174,7 @@
                                    </span>
                                 </div>
                             </div>
+                            
                             <div   class="list" v-if="audit_historyList.length !== 0">
                                 <div class="title">
                                     审核备注:
@@ -221,6 +222,7 @@
                                         </el-radio-group>
                                     </div>
                                 </div>
+                                
                                 <div  v-if="shenheInfor[0].audit_count == 1 && shenheInfor[0].audit == 1 && shenhe_radio == 1">
                                     <div class="add_infor">
                                         <div  class="title">
@@ -262,310 +264,439 @@
                     </div>
 
                 </el-dialog>
+                <!-- 选择产品标签 -->
+                <el-dialog title="标签选择" class="his_tan" :visible.sync="tagsBol"  :close-on-click-modal="false"  >
+                    <div  v-for="(val,key) in alloptions" :key=key class="list" style="padding-left:15px;" >
+
+                        <div class="title">
+                            {{key==0?"产品类型":"页面类型"}}:
+                        </div>
+                        <div class='right_title'>
+                            <el-checkbox-group 
+                                v-model="productTypes"
+                                v-if="key==0">
+                                <el-checkbox v-for="item in val.list" :label="item" :key="item.id">{{item.name}}</el-checkbox>
+                            </el-checkbox-group>
+                            <el-checkbox-group 
+                                v-else
+                                v-model="pageTypes">
+                                <el-checkbox v-for="item in val.list" :label="item" :key="item.id">{{item.name}}</el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                        
+                    </div>
+                    <!-- <div class="list">
+                        <div class="title" style="padding-left:15px;">
+                            {{key}}:
+                        </div>
+                        <div class='right_title'>
+                            <el-checkbox-group 
+                                v-model="pageTypes">
+                                <el-checkbox v-for="item in val" :label="item" :key="item.id">{{item.name}}</el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                    </div> -->
+                    <div slot="footer" style="text-align: center;margin-top: 10px" class="dialog-footer" v-if="role_name != '渠道'">
+                        
+                            <el-button size="mini" @click="tagsBol = false">取 消</el-button>
+                            <el-button size="mini" type="primary" @click="uptags" >确 定</el-button>
+
+
+                    </div>
+                </el-dialog>
             </el-col>
 
         </div>
 </template>
 <script>
- import {mapGetters} from 'vuex';
- import {  place_advertiser_list } from '@/api/acount';
-import { audit_history,page_list,page_shenhe1,page_shenhe2,upyestatus} from '@/api/request';
-import search from '../../search/search';
-const moment = require('moment');
-import state from '../../../utils/sh_state';
+import { mapGetters } from "vuex";
+import { place_advertiser_list } from "@/api/acount";
+import {
+  audit_history,
+  page_list,
+  page_shenhe1,
+  page_shenhe2,
+  upyestatus,
+  upTags,
+  tagsList
+} from "@/api/request";
+import search from "../../search/search";
+const moment = require("moment");
+import state from "../../../utils/sh_state";
 export default {
-    data() {
-        return{
-            role_name:'',
-//搜索
-            search:'',
-            start_date:'',
-            end_date:'',
-            acountselect:'',
-            options:[moment().format('YYYY-MM-01'),moment().format('YYYY-MM-01')],
-            hisdate:[],
-            shenhe_state:'',
-            shenhe_options:[{
-                name:'全部',
-                id:''
-            },{
-                name:'已审核',
-                id:'1'
-            },{
-                name:'未审核',
-                id:'0'
-            },{
-                name:'已驳回',
-                id:'2'
-            }],
-            pickerOptions0: {
-                disabledDate(time){
-                    return time.getTime() >= Date.now() ;
-                },
-            },
-// 下拉列表
-            place_advertiser_list(){
-                place_advertiser_list({
-                }).then(response => {
-                    response.data.unshift({
-                        advertiser:'全部',
-                        id:'',
-                    })
-                    this.options =  response.data;
-                }).catch(err => {
-                    this.$message.error(err);
-                });
-            },
+  data() {
+    return {
+        alloptions:[],
+        tagsBol:false,
+      productTypes:[],
 
-            tableData1:[],
-            tableshow:true,
-            search1:'',
-            chooseData:'urlData',
-            av_id:'',
-// 弹窗
-            shenheInfor:[],
-            jiexiBol:false,
-            shenhe_radio:1,
-            textarea_note:'',
-            yuming_text:'',
-            IP_text:'',
-            link_text:'',
-            audit_historyList:[],
-// 分页
-            count:0,
-            page:'20',
-            num:'1',
-            pageIndex:1,
-            pageSize:20,
-            kehuTableLength:0,
-//请求落地页
-            page_list(){
-                page_list({
-                    av_id:this.av_id,
-                    'per-page':this.page,
-                    page:this.num,
-                    Search_str:this.search1,
-                    start_date: this.start_date,
-                    end_date:this.end_date,
-                    shenhe:this.shenhe_state,
-                }).then(response => {
-                    this.tableData1 =  response.data;
-                    this.kehuTableLength = Number(response.page_data.count)
-                    this.tableshow = false;
-                    this.count = response.page_data.count
-                }).catch(err => {
-                    this.$message.error(err);
-                });
-            },
-            Exceldomain_list(){
-                page_list({
-                    av_id:this.av_id,
-                    'per-page':this.page,
-                    page:this.count,
-                    Search_str:this.search1,
-                    start_date: this.start_date,
-                    end_date:this.end_date,
-                    shenhe:this.shenhe_state,
-                }).then(response => {
-                    let dataExcel =  response.data.filter(function(val){
-                        val.ctime = moment(new Date(parseInt(val.ctime) * 1000)).format('YYYY-MM-DD HH:mm:ss')
-                        if(val.is_ultimate_shenhe == 0 && val.audit != 2 ){
-                            val['jingdu'] = '处理中'
-                        }else if(val.is_ultimate_shenhe == 1){
-                            val['jingdu'] = '已完成'
-                        }else if(val.audit == 2 && val.is_ultimate_shenhe == 0){
-                            val['jingdu'] = '驳回'
-                        }
-                        return val
-                    })
-                    require.ensure([], () => {
-                        const { export_json_to_excel } = require('@/vendor/Export2Excel');
-                        const tHeader = ['时间', '客户', '账户', '域名','进度','推广链接','解析备注'];
-                        const filterVal = ['ctime', 'advertiser', 'a_users','true_url','jingdu','link','note'];
-                        const list = dataExcel;
-                        const data = this.formatJson(filterVal, list);
-                        export_json_to_excel(tHeader, data, '落地页');
-                    })
+      pageTypes:[],
 
-                }).catch(err => {
-                    this.$message.error(err);
-                });
-            },
-            audit_history(){
-                audit_history({
-                    id:this.shenheInfor[0].id,
-                    name:'demand'
-                }).then(response => {
-                    this.audit_historyList = response
-                }).catch(err => {
-                    this.$message.error(err);
-                });
-            },
-//落地页审核
-            page_shenhe(){
-                if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 0 ){
-                    page_shenhe1({
-                        id:this.shenheInfor[0].id,
-                        audit:this.shenhe_radio,
-                        auditu:this.user.id,
-                        note:this.textarea_note,
-                    }).then(response => {
-                        if(response.code == 200){
-                            this.$message({
-                                message: '提交成功！',
-                                type: 'success'
-                            });
-                            this.jiexiBol = false;
-                            this.page_list();
-                        }else{
-
-                            this.$message.error(response.message);
-                        }
-
-                    }).catch(err => {
-                        this.$message.error(err);
-                    });
-                }else  if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 1 ){
-                    page_shenhe2({
-                        id:this.shenheInfor[0].id,
-                        audit:this.shenhe_radio,
-                        auditu:this.user.id,
-                        note:this.textarea_note,
-                    }).then(response => {
-                        if(response.code == 200){
-                            this.$message({
-                                message: '提交成功！',
-                                type: 'success'
-                            });
-                            this.jiexiBol = false;
-                            this.upyestatus()
-                        }else{
-                            this.$message.error(response.message);
-                        }
-                    }).catch(err => {
-                        this.$message.error(err);
-                    });
-                }
-            },
-// 添加落地页需二审求
-            upyestatus(){
-                this.link_text = JSON.stringify(this.link_text.split(/\s+/))
-                upyestatus({
-                    id:this.shenheInfor[0].id,
-                    link:this.link_text,
-                }).then(() => {
-                    this.jiexiBol = false;
-                    this.page_list();
-                }).catch(err => {
-                    this.$message.error(err);
-                });
-            },
-
+      role_name: "",
+      //搜索
+      search: "",
+      start_date: "",
+      end_date: "",
+      acountselect: "",
+      options: [moment().format("YYYY-MM-01"), moment().format("YYYY-MM-01")],
+      hisdate: [],
+      shenhe_state: "",
+      shenhe_options: [
+        {
+          name: "全部",
+          id: ""
+        },
+        {
+          name: "已审核",
+          id: "1"
+        },
+        {
+          name: "未审核",
+          id: "0"
+        },
+        {
+          name: "已驳回",
+          id: "2"
         }
-    },
-    created(){
+      ],
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() >= Date.now();
+        }
+      },
+      // 下拉列表
+      place_advertiser_list() {
+        place_advertiser_list({})
+          .then(response => {
+            response.data.unshift({
+              advertiser: "全部",
+              id: ""
+            });
+            this.options = response.data;
+          })
+          .catch(err => {
+            this.$message.error(err);
+          });
+      },
 
-    },
-    components: {
-//            upload,
-        state,
-        search
-    },
-    computed:{
-        ...mapGetters([
-            'user',
-            'roleName'
-        ])
-    },
+      tableData1: [],
+      tableshow: true,
+      search1: "",
+      chooseData: "urlData",
+      av_id: "",
+      // 弹窗
+      shenheInfor: [],
+      jiexiBol: false,
+      shenhe_radio: 1,
+      textarea_note: "",
+      yuming_text: "",
+      IP_text: "",
+      link_text: "",
+      audit_historyList: [],
+      // 分页
+      count: 0,
+      page: "20",
+      num: "1",
+      pageIndex: 1,
+      pageSize: 20,
+      kehuTableLength: 0,
+      //请求落地页
+      page_list() {
+        page_list({
+          av_id: this.av_id,
+          "per-page": this.page,
+          page: this.num,
+          Search_str: this.search1,
+          start_date: this.start_date,
+          end_date: this.end_date,
+          shenhe: this.shenhe_state
+        })
+          .then(response => {
+            this.tableData1 = response.data;
+            this.kehuTableLength = Number(response.page_data.count);
+            this.tableshow = false;
+            this.count = response.page_data.count;
+          })
+          .catch(err => {
+            this.$message.error(err);
+          });
+      },
+      Exceldomain_list() {
+        page_list({
+          av_id: this.av_id,
+          "per-page": this.page,
+          page: this.count,
+          Search_str: this.search1,
+          start_date: this.start_date,
+          end_date: this.end_date,
+          shenhe: this.shenhe_state
+        })
+          .then(response => {
+            let dataExcel = response.data.filter(function(val) {
+              val.ctime = moment(new Date(parseInt(val.ctime) * 1000)).format(
+                "YYYY-MM-DD HH:mm:ss"
+              );
+              if (val.is_ultimate_shenhe == 0 && val.audit != 2) {
+                val["jingdu"] = "处理中";
+              } else if (val.is_ultimate_shenhe == 1) {
+                val["jingdu"] = "已完成";
+              } else if (val.audit == 2 && val.is_ultimate_shenhe == 0) {
+                val["jingdu"] = "驳回";
+              }
+              return val;
+            });
+            require.ensure([], () => {
+              const { export_json_to_excel } = require("@/vendor/Export2Excel");
+              const tHeader = [
+                "时间",
+                "客户",
+                "账户",
+                "域名",
+                "进度",
+                "推广链接",
+                "解析备注"
+              ];
+              const filterVal = [
+                "ctime",
+                "advertiser",
+                "a_users",
+                "true_url",
+                "jingdu",
+                "link",
+                "note"
+              ];
+              const list = dataExcel;
+              const data = this.formatJson(filterVal, list);
+              export_json_to_excel(tHeader, data, "落地页");
+            });
+          })
+          .catch(err => {
+            this.$message.error(err);
+          });
+      },
+      audit_history() {
+        audit_history({
+          id: this.shenheInfor[0].id,
+          name: "demand"
+        })
+          .then(response => {
+            this.audit_historyList = response;
+          })
+          .catch(err => {
+            this.$message.error(err);
+          });
+      },
+      //落地页审核
+      page_shenhe() {
+        if (
+          this.shenheInfor[0].audit_count == 1 &&
+          this.shenheInfor[0].audit == 0
+        ) {
+          page_shenhe1({
+            id: this.shenheInfor[0].id,
+            audit: this.shenhe_radio,
+            auditu: this.user.id,
+            note: this.textarea_note
+          })
+            .then(response => {
+              if (response.code == 200) {
+                this.$message({
+                  message: "提交成功！",
+                  type: "success"
+                });
+                this.jiexiBol = false;
+                this.page_list();
+              } else {
+                this.$message.error(response.message);
+              }
+            })
+            .catch(err => {
+              this.$message.error(err);
+            });
+        } else if (
+          this.shenheInfor[0].audit_count == 1 &&
+          this.shenheInfor[0].audit == 1
+        ) {
+          page_shenhe2({
+            id: this.shenheInfor[0].id,
+            audit: this.shenhe_radio,
+            auditu: this.user.id,
+            note: this.textarea_note
+          })
+            .then(response => {
+              if (response.code == 200) {
+                this.$message({
+                  message: "提交成功！",
+                  type: "success"
+                });
+                this.jiexiBol = false;
+                this.upyestatus();
+              } else {
+                this.$message.error(response.message);
+              }
+            })
+            .catch(err => {
+              this.$message.error(err);
+            });
+        }
+      },
+      // 添加落地页需二审求
+      upyestatus() {
+        this.link_text = JSON.stringify(this.link_text.split(/\s+/));
+        upyestatus({
+          id: this.shenheInfor[0].id,
+          link: this.link_text
+        })
+          .then(() => {
+            this.jiexiBol = false;
+            this.page_list();
+          })
+          .catch(err => {
+            this.$message.error(err);
+          });
+      }
+    };
+  },
+  created() {
+      this.tagsLists()
+  },
+  components: {
+    //            upload,
+    state,
+    search
+  },
+  computed: {
+    ...mapGetters(["user", "roleName"])
+  },
 
-    methods:{
-        landData(){
-            this.page_list();
-            this.place_advertiser_list();
-            this.role_name = Object.keys( this.roleName);
-        },
-//历史搜索-搜索
-        searchDown(){
-            this.tableshow = true;
-            this.search1 = this.search;
-            this.page_list();
-        },
-//历史搜索-下拉
-        acountAcount(){
-            this.tableshow = true;
-            this.av_id = this.acountselect;
-            this.page_list();
-        },
-        getDate(){
-            this.start_date = moment(this.hisdate[0]).format('YYYY-MM-DD');
-            this.end_date = moment(this.hisdate[1]).format('YYYY-MM-DD');
-            this.tableshow = true;
-            this.page_list();
-        },
-        handleSizeChange(val) {
-            this.page = val;
-            this.pageSize =val;
-            this.loading = true;
-            this.page_list()
-        },
-        handleCurrentChange(val) {
-            this.num = val;
-            this.loading = true;
-            this.page_list()
-        },
-//弹窗
-        look_infor(val){
-            this.shenheInfor = [];
-            this.yuming_text = '';
-             this.IP_text = '';
-             this.link_text = '';
-             this.textarea_note = '';
+  methods: {
+      //获取标签类别
+      tagsLists() {
+        tagsList().then((response) => {
+            this.alloptions = response
 
-            this.shenheInfor.push(val);
-            this.audit_historyList = [];
-            this.audit_history();
-            this.jiexiBol = true;
-        },
-        shenheChange(){
-            this.yuming_text = '';
-            this.IP_text = '';
-            this.link_text = '';
-        },
-        push_shenhe(){
-            this.$message('正在提交，请稍后');
-            if(this.shenhe_radio == 1){
-                if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 0 ){
-                    this.page_shenhe()
-                }else  if(this.shenheInfor[0].audit_count == 1 && this.shenheInfor[0].audit == 1 ){
-                    if(this.link_text == ''){
-                        this.$message.error('推广链接不能为空');
-                    }else{
-                        this.page_shenhe();
-                    }
-                }
-            }else{
-                if(this.textarea_note == '' ){
-                    this.$message.error('驳回审核必填');
-                }else{
+          })
+          .catch(err => {
+            this.$message.error(err);
+          });
+      },
+    //   上传标签
+      uptags(){
+
+          if(this.productTypes.length>=1&&this.pageTypes.length>=1){
+              upTags({
+                id: this.shenheInfor[0].account_id,
+                tags: `${this.productTypes.map(i=>i.name).join(',')},${this.pageTypes.map(i=>i.name).join(',')}`
+                })
+                .then(() => {
+                    this.productTypes =[];
+                    this.pageTypes = [];
+                    this.tagsBol = false;
                     this.page_shenhe();
-                }
+                })
+                .catch(err => {
+                    this.$message.error(err);
+                });
+          }else{
+              this.$message.info('请选择产品类型或者页面类型');
+          }
+          
+      },
+    landData() {
+      this.page_list();
+      this.place_advertiser_list();
+      this.role_name = Object.keys(this.roleName);
+    },
+    //历史搜索-搜索
+    searchDown() {
+      this.tableshow = true;
+      this.search1 = this.search;
+      this.page_list();
+    },
+    //历史搜索-下拉
+    acountAcount() {
+      this.tableshow = true;
+      this.av_id = this.acountselect;
+      this.page_list();
+    },
+    getDate() {
+      this.start_date = moment(this.hisdate[0]).format("YYYY-MM-DD");
+      this.end_date = moment(this.hisdate[1]).format("YYYY-MM-DD");
+      this.tableshow = true;
+      this.page_list();
+    },
+    handleSizeChange(val) {
+      this.page = val;
+      this.pageSize = val;
+      this.loading = true;
+      this.page_list();
+    },
+    handleCurrentChange(val) {
+      this.num = val;
+      this.loading = true;
+      this.page_list();
+    },
+    //弹窗
+    look_infor(val) {
+      this.shenheInfor = [];
+      this.yuming_text = "";
+      this.IP_text = "";
+      this.link_text = "";
+      this.textarea_note = "";
 
-            }
-        },
- //导出
-        Excel(){
-            this.Exceldomain_list()
-        },
-        formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        },
+      this.shenheInfor.push(val);
+      this.audit_historyList = [];
+      this.audit_history();
+      this.jiexiBol = true;
     },
-    filters:{
-        filterDate: function (val) {
-            var time=new Date(parseInt(val) * 1000);
-            return   moment(time).format('YYYY-MM-DD HH:mm:ss')
-        },
+    shenheChange() {
+      this.yuming_text = "";
+      this.IP_text = "";
+      this.link_text = "";
     },
-    props: ['infoedata_ladnpage']
-}
+    push_shenhe() {
+      this.$message("正在提交，请稍后");
+      if (this.shenhe_radio == 1) {
+        if (
+          this.shenheInfor[0].audit_count == 1 &&
+          this.shenheInfor[0].audit == 0
+        ) {
+            this.tagsBol =true;
+
+        } else if (
+          this.shenheInfor[0].audit_count == 1 &&
+          this.shenheInfor[0].audit == 1
+        ) {
+          if (this.link_text == "") {
+            this.$message.error("推广链接不能为空");
+          } else {
+            this.page_shenhe();
+          }
+        }
+      } else {
+        if (this.textarea_note == "") {
+          this.$message.error("驳回审核必填");
+        } else {
+          this.page_shenhe();
+        }
+      }
+    },
+    //导出
+    Excel() {
+      this.Exceldomain_list();
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
+    }
+  },
+  filters: {
+    filterDate: function(val) {
+      var time = new Date(parseInt(val) * 1000);
+      return moment(time).format("YYYY-MM-DD HH:mm:ss");
+    }
+  },
+  props: ["infoedata_ladnpage"]
+};
 </script>
+
+
