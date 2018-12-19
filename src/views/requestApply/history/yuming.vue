@@ -152,6 +152,14 @@
                                     {{item.a_users}}
                               </div>
                             </div>
+                            <div   class="list">
+                                <div  class="title">
+                                    主域:
+                                </div>
+                              <div class='right_title'>
+                                    {{item.url}}
+                              </div>
+                            </div>
                             <div   class="list" v-if="role_name != '渠道'">
                                 <div class="title">
                                     解析备注:
