@@ -424,8 +424,8 @@ export default {
       Exceldomain_list() {
         page_list({
           av_id: this.av_id,
-          "per-page": this.page,
-          page: this.count,
+          "per-page": this.count,
+          page: 1,
           Search_str: this.search1,
           start_date: this.start_date,
           end_date: this.end_date,

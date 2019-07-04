@@ -36,6 +36,7 @@
                     username:'',
                     password: '',
                     checked:true,
+                    qd:1,
                 },
                 rules2: {
                     username: [
