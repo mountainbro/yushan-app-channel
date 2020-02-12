@@ -120,7 +120,7 @@ export default {
                 place_advertiser_list({
                 }).then(response => {
                    this.companyoptions=response.data;
-                   
+
                 }).catch(err => {
                     this.$message.error(err);
                 });
@@ -180,7 +180,7 @@ export default {
 
     },
     watch:{
-        
+
     },
     methods:{
 // 获取logo
@@ -198,7 +198,7 @@ export default {
             this.iframeurl = '';
             this.place_to_advertise()
             this.zhanghubol = false;
-            
+
         },
         //账户change
         zhanghuchange(){
@@ -229,7 +229,7 @@ export default {
             let _this =this;
             if(_this.tuiguang.value1&&_this.tuiguang.value&&_this.tuiguang.value2){
                 this.$refs.child.submitUpload();
-                
+
             }else{
                 _this.$message.error('信息没有添加完成');
                 this.bol = false;
@@ -310,7 +310,7 @@ export default {
             position: relative;
             width: 300px;
             height: 610px;
-            background:  url(http://test.myushan.com/8231phones.png) no-repeat ;
+            background:  url(http://img.zntec.mobi/8231phones.png) no-repeat ;
             background-size: 100% 100%;
             float: right;
             .logo{

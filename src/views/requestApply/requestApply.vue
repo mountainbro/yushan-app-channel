@@ -94,21 +94,21 @@ export default {
                    display: inline-block;
                    width:290px!important;
                }
-               
+
                .el-select__caret{
                    line-height: 28px!important;
                }
-               
 
-               
+
+
            }
-           
+
        }
        .phone{
            position: relative;
             width: 33vw;
             height: 59vh;
-            background:  url(http://test.myushan.com/821phone.png) no-repeat ;
+            background:  url(http://img.zntec.mobi/821phone.png) no-repeat ;
             background-size: 100% 100%;
             .logo{
                 position: absolute;

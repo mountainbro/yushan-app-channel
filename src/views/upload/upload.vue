@@ -3,7 +3,7 @@
     <el-row style="display:inline-bloack;">
         <el-upload
                     ref="upload"
-                    action='http://upload-z0.qiniu.com'
+                    action='http://upload-z1.qiniup.com'
                     :on-progress="handleProgress"
                    :on-success="handleSuccess"
                    :on-error="handleError"
