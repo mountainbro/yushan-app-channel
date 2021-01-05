@@ -23,7 +23,7 @@
     "@vue/cli-plugin-babel": "^3.0.0-rc.10",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.10",
     "@vue/cli-service": "^3.0.0-rc.10",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "node-sass": "^4.9.2",
     "sass-loader": "^7.1.0",
     "script-loader": "^0.7.2",
